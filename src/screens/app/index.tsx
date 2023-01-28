@@ -21,10 +21,10 @@ export default function App() {
             {({ open }) => (
               <>
                 <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
-                  <div className="relative flex h-16 items-center justify-between lg:border-b lg:border-indigo-400 lg:border-opacity-25">
+                  <div className="relative flex h-16 items-center justify-between lg:border-b lg:border-reebelo-100 lg:border-opacity-25">
                     <div className="flex items-center px-2 lg:px-0">
                       <div className="flex-shrink-0">
-                        <Image src='/reebelo-logo.png' alt="Reebelo Logo" height={40} width={40} />
+                        <Image src='/reeb.svg' alt="Reebelo Logo" height={40} width={40} />
                       </div>
                       <div className="hidden lg:ml-10 lg:block">
                         <div className="flex space-x-4">
