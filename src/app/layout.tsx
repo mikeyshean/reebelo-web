@@ -11,14 +11,14 @@ export default function RootLayout({children}: {
   const queryClient = new QueryClient()
 
   return (
-    <html className="h-full bg-white">
+    <html className="h-full bg-gray">
       <head>
-        <title>API Mapper</title>
+        <title>Admin - Reebelo</title>
       </head>
-      <body className="h-full overflow-hidden">
-      <QueryClientProvider client={queryClient}>
-        {children}
-      </QueryClientProvider>
+      <body className="h-full">
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
       </body>
     </html>
   );
