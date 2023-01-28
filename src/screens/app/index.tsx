@@ -1,6 +1,7 @@
 import { Disclosure } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
+import { ProductsPage } from './products/ListProducts'
 
 const navigation = [
   { name: 'Products', href: '#', current: true },
@@ -23,11 +24,6 @@ export default function App() {
                   <div className="relative flex h-16 items-center justify-between lg:border-b lg:border-indigo-400 lg:border-opacity-25">
                     <div className="flex items-center px-2 lg:px-0">
                       <div className="flex-shrink-0">
-                        {/* <img
-                          className="block h-8 w-8"
-                          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=300"
-                          alt="Your Company"
-                        /> */}
                         <Image src='/reebelo-logo.png' alt="Reebelo Logo" height={40} width={40} />
                       </div>
                       <div className="hidden lg:ml-10 lg:block">
@@ -100,11 +96,9 @@ export default function App() {
 
         <main className="-mt-32">
           <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-            {/* My Product and Order View */}
             <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
-              <div className="h-96 rounded-lg border-4 border-dashed border-gray-200" />
+              <ProductsPage />
             </div>
-            {/* /End Product and Order View*/}
           </div>
         </main>
       </div>

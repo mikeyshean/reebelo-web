@@ -10,7 +10,8 @@ module.exports = {
       colors: {
         reebelo: {
           100: '#92F6F9',
-          200: '#2B40E2'
+          200: '#2B40E2',
+          '200-hover': '#2436c1'
         }
       }
     },
