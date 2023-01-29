@@ -42,7 +42,7 @@ export default function ModalContainer({children, cancelText, submitText, onSubm
                 <div className="mt-9 sm:mt-10 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-reebelo-200 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-reebelo-200-hover focus:outline-none focus:ring-2 focus:ring-reebelo-200-hover focus:ring-offset-2 sm:col-start-2 sm:text-sm"
                     onClick={onSubmit}
                   >
                     {submitText}
