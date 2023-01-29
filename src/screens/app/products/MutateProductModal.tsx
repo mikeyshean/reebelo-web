@@ -8,14 +8,16 @@ import { Input } from '@/components/Forms/Input'
 import { ValidationMessage } from '@/components/Forms/ValidationMessage'
 import { formatPriceFromDigits } from '@/components/utils'
 import { InputWithAddon } from '@/components/Forms/InputWithAddon'
+import { useProductContext } from './context'
 
 
 export default function MutateProductModal(
-  { id, productName, price, show, toggleModal, isEditForm }:
-   {
-    id: string|null,
-    productName: string|null,
-    price: string|null
+  { 
+    show,
+    toggleModal,
+    isEditForm 
+  }:
+  {
     show: boolean,
     toggleModal: () => void,
     isEditForm: boolean,
@@ -23,9 +25,9 @@ export default function MutateProductModal(
 ) {
   const apiCreateProduct = api.products.useCreate()
   const apiEditProduct = api.products.useEdit()
-  const [nameValue, setNameValue] = useState(productName || '')
+  const { ctxProductName, ctxProductId, ctxPrice, setCtxPrice, setCtxProductName } = useProductContext()
   const [quantityValue, setQuantityValue] = useState('')
-  const [priceValue, setPriceValue] = useState(price || '')
+  // const [priceValue, setCtxPrice] = useState('')
   const [isValidName, setIsValidName] = useState(true)
   const [isValidQuantity, setIsValidQuantity] = useState(true)
   const [isValidPrice, setIsValidPrice] = useState(true)
@@ -34,7 +36,7 @@ export default function MutateProductModal(
 
   async function handleOnSubmit() {
     let isValid = true
-    if (!nameValue) {
+    if (!ctxProductName) {
       setIsValidName(false)
       isValid = false
     }
@@ -45,7 +47,7 @@ export default function MutateProductModal(
       isValid = false
     }
 
-    const price = parseFloat(priceValue)
+    const price = parseFloat(ctxPrice)
     if (isNaN(price) || price < 0) {
       setIsValidPrice(false)
       isValid = false
@@ -55,13 +57,13 @@ export default function MutateProductModal(
       return
     }
 
-    if (isEditForm && id) {
+    if (isEditForm && ctxProductId && ctxProductName) {
       apiEditProduct.mutate(
         {
-          id: id,
-          name: nameValue,
+          id: ctxProductId,
+          name: ctxProductName,
           quantity: quantityValue,
-          price: priceValue
+          price: ctxPrice!
         },
         {
           onSuccess: () => {
@@ -81,9 +83,9 @@ export default function MutateProductModal(
     } else {
       apiCreateProduct.mutate(
         {
-          name: nameValue,
+          name: ctxProductName!,
           quantity: quantityValue,
-          price: priceValue
+          price: ctxPrice!
         }, 
         {
           onSuccess: () => {
@@ -109,7 +111,7 @@ export default function MutateProductModal(
       setIsValidName(false)
     } else {
       setIsValidName(true)
-      setNameValue(value)
+      setCtxProductName(value)
     }
   }
   
@@ -129,27 +131,23 @@ export default function MutateProductModal(
       setIsValidPrice(false)
     } else {
       setIsValidPrice(true)
-      setPriceValue(formatPriceFromDigits(digits))
+      setCtxPrice(formatPriceFromDigits(digits))
     }
   }
 
   function resetValidations() {
     setIsValidName(true)
+    setIsValidPrice(true)
+    setIsValidQuantity(true)
   }
 
   useEffect(() => {
     if (show && !isEditForm) {
-      setNameValue('')
-      resetValidations()
+      setCtxProductName('')
+      setCtxPrice('')
     }
+    resetValidations()
   }, [show])
-
-
-  useEffect(() => {
-    if (productName) {
-      setNameValue(productName)
-    }
-  }, [productName])
 
   return (
     <Modal cancelText="Cancel" submitText="Save" onSubmit={handleOnSubmit} show={show} toggleModal={toggleModal}>
@@ -159,7 +157,7 @@ export default function MutateProductModal(
       <Input 
         name="product-name"
         placeholder="MyProduct"
-        value={nameValue}
+        value={ctxProductName}
         label="Product Name"
         onChange={validateProductName}
         isValid={(isValidName && !isUniqueError)}
@@ -172,7 +170,7 @@ export default function MutateProductModal(
       <InputWithAddon
         name="price-name"
         placeholder="0.00"
-        value={priceValue}
+        value={ctxPrice}
         label="Price"
         onChange={validatePrice}
         isValid={isValidPrice}

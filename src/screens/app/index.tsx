@@ -1,7 +1,7 @@
 import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
-import { ProductsPage } from './products/ListProducts'
+import { ProductIndex } from './products'
 
 const navigation = [
   { name: 'Products', href: '#', current: true },
@@ -97,7 +97,7 @@ export default function App() {
         <main className="-mt-32">
           <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
             <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
-              <ProductsPage />
+              <ProductIndex />
             </div>
           </div>
         </main>

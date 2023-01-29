@@ -2,24 +2,36 @@ import { api } from "@/api"
 import { classNames } from "@/components/utils"
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline"
 import { useState } from "react"
+import { useProductContext } from "./context"
 import MutateProductModal from "./MutateProductModal"
 
 
 export function ProductsPage() {
   const { data: products } = api.products.useList()
-  const [editProductId, setEditProductId] = useState<string|null>(null)
-  const [editProductName, setEditProductName] = useState<string|null>(null)
-  const [editPrice, setEditPrice] = useState<string|null>(null)
   const [showModal, setShowModal] = useState(false)
   const [isEditForm, setIsEditForm] = useState(false)
+  const { setCtxProductId, setCtxProductName, setCtxPrice } = useProductContext()
 
   function toggleModal() {
     setShowModal(!showModal)
   }
 
   function handleAddProductOnClick() {
-    setEditProductName(null)
-    setEditPrice(null)
+    setCtxProductName('')
+    setCtxPrice('')
+    setIsEditForm(false)
+    setShowModal(true)
+  }
+
+  function handleEditForm(
+    id: string,
+    productName: string,
+    price: string,
+  ) {
+    setCtxProductId(id)
+    setCtxPrice(price)
+    setCtxProductName(productName)
+    setIsEditForm(true)
     setShowModal(true)
   }
 
@@ -27,9 +39,6 @@ export function ProductsPage() {
     <div className="mt-5 md:col-span-2 md:mt-10">
       <div className="px-4 sm:px-6 lg:px-8">
         <MutateProductModal
-            id={editProductId}
-            productName={editProductName}
-            price={editPrice}
             show={showModal}
             toggleModal={toggleModal}
             isEditForm={isEditForm}
@@ -117,7 +126,7 @@ export function ProductsPage() {
                             'flex justify-end whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-6 lg:pr-8'
                           )}
                         >
-                          <button className="text-indigo-600 hover:text-black">
+                          <button className="text-indigo-600 hover:text-black" onClick={(() => handleEditForm(product.id, product.name, product.price))}>
                             <PencilSquareIcon
                                 className={classNames(
                                   'text-indigo-300 hover:text-indigo-500',
