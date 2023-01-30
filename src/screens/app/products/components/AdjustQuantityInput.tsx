@@ -22,6 +22,11 @@ export function AdjustQuantityInput({ isValid, onChange }: { isValid: boolean, o
     toggleShow()
   }
 
+  function handleAdjustmentTypeOnClick(type: AdjustQuantityType) {
+    onChange(ctxAdjustedQuantity)
+    setCtxAdjustQuantityType(type)
+  }
+
   return (
     <>
     { !show && 
@@ -57,7 +62,7 @@ export function AdjustQuantityInput({ isValid, onChange }: { isValid: boolean, o
                 ctxAdjustQuantityType === AdjustQuantityType.INCREASE ? 'bg-reebelo-200 text-white' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50',
                 !isValid && ctxAdjustQuantityType === AdjustQuantityType.NONE ? "border-red-300 pr-10 text-red-900 placeholder-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500" : "",
                 "relative inline-flex items-center rounded-l-md border px-4 py-2 text-sm font-medium focus:border-reebelo-200-hover focus:outline-none focus:ring-1 focus:ring-reebelo-200-hover")}
-              onClick={() => setCtxAdjustQuantityType(AdjustQuantityType.INCREASE)}
+              onClick={() => handleAdjustmentTypeOnClick(AdjustQuantityType.INCREASE)}
             >
               Increase
             </button>
@@ -67,7 +72,7 @@ export function AdjustQuantityInput({ isValid, onChange }: { isValid: boolean, o
                 ctxAdjustQuantityType === AdjustQuantityType.DECREASE ? 'bg-reebelo-200 text-white' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50',
                 !isValid && ctxAdjustQuantityType === AdjustQuantityType.NONE ? "border-red-300 pr-10 text-red-900 placeholder-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500" : "",
                 "relative -ml-px inline-flex items-center rounded-r-md border px-4 py-2 text-sm font-medium focus:z-10 focus:border-reebelo-200-hover focus:outline-none focus:ring-1 focus:ring-reebelo-200-hover")}
-              onClick={() => setCtxAdjustQuantityType(AdjustQuantityType.DECREASE)}
+              onClick={() => handleAdjustmentTypeOnClick(AdjustQuantityType.DECREASE)}
             >
               Decrease
             </button>
