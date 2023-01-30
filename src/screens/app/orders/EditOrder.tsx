@@ -46,7 +46,7 @@ export default function EditOrder() {
     }
   })
 
-  const apiUpsertOrderShipment = api.orders.useUpsertShipment()
+  const apiUpsertShipment = api.shipments.useUpsert()
   const [selectedCountry, setSelectedCountry] = useState<SelectItem>(EmptySelectItem)
   const [selectedTrackingCompany, setSelectedTrackingCompany] = useState<SelectItem>(EmptySelectItem)
   const [trackingCompanyItems, setTrackingCompanyItems] = useState<SelectItem[]>([])
@@ -64,7 +64,7 @@ export default function EditOrder() {
 
   function handleSubmit(event: React.SyntheticEvent) {
     event.preventDefault()
-    apiUpsertOrderShipment.mutate(
+    apiUpsertShipment.mutate(
       {
         id: ctxOrderId,
         trackingNumber: trackingNumber,
