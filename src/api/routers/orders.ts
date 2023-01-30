@@ -33,13 +33,6 @@ export const orderRouter =  {
     }
     return useMutation({ mutationKey: ['orders'], mutationFn: mutationFn })
   },
-  useGetOrderShipment: ({ id, ...args }: { id: string, [key: string]: any }) => {
-    const queryFn = async () => { 
-      const response = await fetcher(`/api/orders/${id}/shipments`)
-      return ShipmentSchema.parse(response)
-    }
-    return useQuery({ queryKey: ['orders', 'shipments', id], queryFn: queryFn, ...args })
-  },
 }
 
 

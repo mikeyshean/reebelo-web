@@ -27,7 +27,7 @@ export default function EditOrder() {
       setSelectedStatus(orderStatuses.find(item => item.value.toLowerCase() === data.status) || EmptySelectItem)
     } 
   })
-  api.orders.useGetOrderShipment({
+  api.shipments.useGet({
     id: ctxOrderId, 
     retry: false,
     onSuccess: (data: ShipmentType) => {

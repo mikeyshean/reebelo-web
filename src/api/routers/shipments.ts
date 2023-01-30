@@ -11,6 +11,13 @@ export const shipmentRouter =  {
     }
     return useQuery({ queryKey: ['shipments'], queryFn: queryFn, ...args })
   },
+  useGet: ({ id, ...args }: { id: string, [key: string]: any }) => {
+    const queryFn = async () => { 
+      const response = await fetcher(`/api/shipments/${id}`)
+      return ShipmentSchema.parse(response)
+    }
+    return useQuery({ queryKey: ['shipments', id], queryFn: queryFn, ...args })
+  },
   useUpsert: () => {
     const mutationFn = async (
       data: { 
