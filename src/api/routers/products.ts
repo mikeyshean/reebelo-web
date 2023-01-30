@@ -48,6 +48,13 @@ export const productRouter =  {
     }
     return useMutation({ mutationKey: ['products'], mutationFn: mutationFn })
   },
+  useDelete: () => {
+    const mutationFn = async (data: { id: string }) => { 
+      const response = await fetcher(`/api/products/${data.id}`, { method: "DELETE" })
+      return response
+    }
+    return useMutation({ mutationKey: ['products'], mutationFn: mutationFn })
+  },
 }
 
 

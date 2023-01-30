@@ -1,6 +1,7 @@
 import { api } from "@/api"
 import { classNames } from "@/components/utils"
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline"
+import { PencilSquareIcon, TrashIcon, ShoppingCartIcon } from "@heroicons/react/24/outline"
+import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useProductContext } from "./context"
 import MutateProductModal from "./MutateProductModal"
@@ -8,9 +9,11 @@ import MutateProductModal from "./MutateProductModal"
 
 export function ProductsPage() {
   const { data: products } = api.products.useList()
+  const apiDeleteProduct = api.products.useDelete()
   const [showModal, setShowModal] = useState(false)
   const [isEditForm, setIsEditForm] = useState(false)
   const { setCtxProductId, setCtxProductName, setCtxPrice } = useProductContext()
+  const queryClient = useQueryClient()
 
   function toggleModal() {
     setShowModal(!showModal)
@@ -33,6 +36,14 @@ export function ProductsPage() {
     setCtxProductName(productName)
     setIsEditForm(true)
     setShowModal(true)
+  }
+
+  function handleDelete(id: string) {
+    apiDeleteProduct.mutate({id: id}, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({queryKey: ["products"]})
+      }
+    })
   }
 
   return (
@@ -89,7 +100,7 @@ export function ProductsPage() {
                         scope="col"
                         className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pr-4 pl-3 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
                       >
-                        <span className="sr-only">Edit</span>
+                        <span className="sr-only">Create Order, Edit, Delete</span>
                       </th>
                     </tr>
                   </thead>
@@ -127,6 +138,16 @@ export function ProductsPage() {
                           )}
                         >
                           <button className="text-indigo-600 hover:text-black" onClick={(() => handleEditForm(product.id, product.name, product.price))}>
+                            <ShoppingCartIcon
+                                className={classNames(
+                                  'text-indigo-300 hover:text-indigo-500',
+                                  'h-6 w-6'
+                                )}
+                                aria-hidden="true"
+                              />
+                              <span className="sr-only">, Create Order {product.name}</span>
+                          </button>
+                          <button className="text-indigo-600 hover:text-black pl-4" onClick={(() => handleEditForm(product.id, product.name, product.price))}>
                             <PencilSquareIcon
                                 className={classNames(
                                   'text-indigo-300 hover:text-indigo-500',
@@ -136,7 +157,7 @@ export function ProductsPage() {
                               />
                               <span className="sr-only">, Edit {product.name}</span>
                           </button>
-                          <button className="text-indigo-600 hover:text-black pl-4">
+                          <button className="text-indigo-600 hover:text-black pl-4" onClick={() => handleDelete(product.id)}>
                             <TrashIcon
                                 className={classNames(
                                   'text-indigo-300 hover:text-indigo-500',
