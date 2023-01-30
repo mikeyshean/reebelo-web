@@ -1,7 +1,9 @@
 import { api } from "@/api"
+import { toast } from 'react-toastify';
 import { classNames, formatFloatStringToPrice } from "@/components/utils"
 import { PencilSquareIcon, TrashIcon, ShoppingCartIcon } from "@heroicons/react/24/outline"
 import { useQueryClient } from "@tanstack/react-query"
+import { ApiError, API_ERROR } from "api/errors"
 import { useState } from "react"
 import { useProductContext } from "./context"
 import CreateOrderModal from "./CreateOrderModal"
@@ -59,7 +61,15 @@ export function ProductsPage() {
     apiDeleteProduct.mutate({id: id}, {
       onSuccess: () => {
         queryClient.invalidateQueries({queryKey: ["products"]})
-      }
+      },
+      onError(error) {
+        if (error instanceof ApiError) {
+          if (error.errorCode == API_ERROR.UNIQUE_OR_REQUIRED_FIELD) {
+            toast.warn("Can't delete product with existing orders.", { autoClose: 4000 })
+          }
+        }
+        toast.warn("Oops! Something went wrong...", { autoClose: 4000 })
+      },
     })
   }
 
