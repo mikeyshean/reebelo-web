@@ -1,6 +1,6 @@
 import { Input } from "@/components/Forms/Input";
 import { ValidationMessage } from "@/components/Forms/ValidationMessage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useProductContext } from "../context";
 import { XCircleIcon } from "@heroicons/react/24/outline"
 import { classNames } from "@/components/utils";
@@ -32,7 +32,7 @@ export function AdjustQuantityInput({ isValid, onChange }: { isValid: boolean, o
     { !show && 
       <div className="pt-8">
         <Button
-          buttonText="Adjust Quantity"
+          buttonText="Add / Remove Quantity"
           isLoading={false}
           onClick={toggleShow}
         />

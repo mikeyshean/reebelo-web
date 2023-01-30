@@ -4,7 +4,7 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Tooltip } from 'react-tooltip'
 
 export function Input({ 
-  name, value, label, isValid, onChange, placeholder, describedBy, children, tooltipText, tooltipId }: 
+  name, value, label, isValid, onChange, placeholder, describedBy, children, tooltipText, tooltipId, disabled }: 
   { 
     name: string,
     value: string,
@@ -15,6 +15,7 @@ export function Input({
     describedBy?: string,
     tooltipText?: string,
     tooltipId?: string,
+    disabled?: boolean,
     children: React.ReactNode
   }) {
   
@@ -45,12 +46,14 @@ export function Input({
           className={classNames(
             "block w-full rounded-md sm:text-sm", 
             isValid ? "border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" : "border-red-300 pr-10 text-red-900 placeholder-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500",
+            disabled ? 'bg-gray-100' : ''
           )}
           placeholder={placeholder}
           aria-invalid="true"
           aria-describedby={describedBy}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          disabled={!!disabled}
         />
         {!isValid && 
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">

@@ -4,26 +4,32 @@ import { PencilSquareIcon, TrashIcon, ShoppingCartIcon } from "@heroicons/react/
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useProductContext } from "./context"
+import CreateOrderModal from "./CreateOrderModal"
 import MutateProductModal from "./MutateProductModal"
 
 
 export function ProductsPage() {
   const { data: products } = api.products.useList()
   const apiDeleteProduct = api.products.useDelete()
-  const [showModal, setShowModal] = useState(false)
+  const [showProductModal, setShowProductModal] = useState(false)
+  const [showOrderModal, setShowOrderModal] = useState(false)
   const [isEditForm, setIsEditForm] = useState(false)
   const { setCtxProductId, setCtxProductName, setCtxPrice } = useProductContext()
   const queryClient = useQueryClient()
 
-  function toggleModal() {
-    setShowModal(!showModal)
+  function toggleProductModal() {
+    setShowProductModal(!showProductModal)
+  }
+  
+  function toggleOrderModal() {
+    setShowOrderModal(!showOrderModal)
   }
 
   function handleAddProductOnClick() {
     setCtxProductName('')
     setCtxPrice('')
     setIsEditForm(false)
-    setShowModal(true)
+    setShowProductModal(true)
   }
 
   function handleEditForm(
@@ -35,7 +41,18 @@ export function ProductsPage() {
     setCtxPrice(price)
     setCtxProductName(productName)
     setIsEditForm(true)
-    setShowModal(true)
+    setShowProductModal(true)
+  }
+
+  function handleCreateOrderOnClick(
+    id: string,
+    productName: string,
+    price: string,
+  ) {
+    setCtxProductId(id)
+    setCtxPrice(price)
+    setCtxProductName(productName)
+    setShowOrderModal(true)
   }
 
   function handleDelete(id: string) {
@@ -50,10 +67,14 @@ export function ProductsPage() {
     <div className="mt-5 md:col-span-2 md:mt-10">
       <div className="px-4 sm:px-6 lg:px-8">
         <MutateProductModal
-            show={showModal}
-            toggleModal={toggleModal}
-            isEditForm={isEditForm}
-          />
+          show={showProductModal}
+          toggleModal={toggleProductModal}
+          isEditForm={isEditForm}
+        />
+        <CreateOrderModal
+          show={showOrderModal}
+          toggleModal={toggleOrderModal}
+        />
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <h1 className="text-2xl font-semibold text-gray-900">Products</h1>
@@ -137,7 +158,7 @@ export function ProductsPage() {
                             'flex justify-end whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-6 lg:pr-8'
                           )}
                         >
-                          <button className="text-indigo-600 hover:text-black" onClick={(() => handleEditForm(product.id, product.name, product.price))}>
+                          <button className="text-indigo-600 hover:text-black" onClick={(() => handleCreateOrderOnClick(product.id, product.name, product.price))}>
                             <ShoppingCartIcon
                                 className={classNames(
                                   'text-indigo-300 hover:text-indigo-500',

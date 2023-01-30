@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import Modal from '@/components/Forms/Modal'
 import { api } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
-import { ApiError } from 'api/errors'
-import { API_ERROR } from '@/constants'
+import { ApiError, API_ERROR } from 'api/errors'
 import { Input } from '@/components/Forms/Input'
 import { ValidationMessage } from '@/components/Forms/ValidationMessage'
 import { formatPriceFromDigits } from '@/components/utils'
@@ -187,6 +186,7 @@ export default function MutateProductModal(
     setIsValidName(true)
     setIsValidPrice(true)
     setIsValidQuantity(true)
+    setIsValidAdjustedQuantity(true)
   }
 
   useEffect(() => {
@@ -203,7 +203,7 @@ export default function MutateProductModal(
     <Modal cancelText="Cancel" submitText="Save" onSubmit={handleOnSubmit} show={show} toggleModal={toggleModal}>
       <h1 className="text-xl font-semibold text-gray-900">{isEditForm ? "Edit" : "Create"} Product</h1>
 
-      {/* Integration Name */}
+      {/* Product Name */}
       <Input 
         name="product-name"
         placeholder="MyProduct"
@@ -221,7 +221,7 @@ export default function MutateProductModal(
         name="price-name"
         placeholder="0.00"
         value={ctxPrice}
-        label="Price"
+        label="Unit Price"
         onChange={validatePrice}
         isValid={isValidPrice}
         describedBy="price"

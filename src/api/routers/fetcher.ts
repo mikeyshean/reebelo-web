@@ -1,5 +1,4 @@
-import { ApiError } from 'api/errors'
-import { API_ERROR } from '../../constants'
+import { ApiError, API_ERROR } from 'api/errors'
 
 const API_HOST = process.env.API_HOST || ''
 
@@ -40,8 +39,8 @@ export async function fetcher(
       case 422:
         const err = await response.json()
         // TODO: Handle API error codes here
-        if (err['api_error_code'] == 1) {
-          throw new ApiError(response.status, "Unique or duplicate error", API_ERROR.UNIQUE_OR_REQUIRED_FIELD)
+        if ([API_ERROR.UNIQUE_OR_REQUIRED_FIELD, API_ERROR.INSUFFICIENT_QUANTITY].includes(err['error_code'])) {
+          throw new ApiError(response.status, err['message'], err['error_code'])
         }
         throw new Error("Http 422: Unprocessable Entity")
       default:
