@@ -71,10 +71,10 @@ export function AdjustQuantityInput({ isValidQuantity, isOutOfStockError, onChan
               type="button"
               className={classNames(
                 ctxAdjustQuantityType === AdjustQuantityType.INCREASE ? 'bg-reebelo-200 text-white' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50',
-                "relative inline-flex items-center rounded-l-md border px-4 py-2 text-sm font-medium focus:border-reebelo-200-hover focus:outline-none focus:ring-1 focus:ring-reebelo-200-hover")}
+                "relative inline-flex items-center rounded-l-md border px-8 py-2 text-sm font-medium focus:border-reebelo-200-hover focus:outline-none focus:ring-1 focus:ring-reebelo-200-hover")}
               onClick={() => handleAdjustmentTypeOnClick(AdjustQuantityType.INCREASE)}
             >
-              Increase
+              Add
             </button>
             <button
               type="button"
@@ -83,7 +83,7 @@ export function AdjustQuantityInput({ isValidQuantity, isOutOfStockError, onChan
                 "relative -ml-px inline-flex items-center rounded-r-md border px-4 py-2 text-sm font-medium focus:z-10 focus:border-reebelo-200-hover focus:outline-none focus:ring-1 focus:ring-reebelo-200-hover")}
               onClick={() => handleAdjustmentTypeOnClick(AdjustQuantityType.DECREASE)}
             >
-              Decrease
+              Remove
             </button>
             <button className="pl-4" onClick={handleCloseAdjustedQuantity}>
               <XCircleIcon
