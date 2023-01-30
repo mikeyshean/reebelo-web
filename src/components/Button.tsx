@@ -3,7 +3,6 @@ import { classNames } from "./utils";
 
 export function Button({ buttonText, isLoading, onClick, isDisabled=false, ...props }: { buttonText: string, isLoading: boolean, isDisabled?: boolean, onClick: (e: SyntheticEvent<Element, Event>) => void, [x:string]: any }) {
   return (
-    // <button disabled type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-flex items-center">
     <button {...props} disabled={isDisabled} onClick={onClick} type="button" className={classNames(isLoading || isDisabled ? "disabled opacity-70 hover:bg-reebelo-200" : "hover:bg-reebelo-200-hover",
       "disabled flex w-full justify-center rounded-md border border-transparent bg-reebelo-200 py-2 px-4 text-sm font-medium text-white shadow-sm  focus:outline-none focus:ring-2 focus:ring-reebelo-200-hover focus:ring-offset-2 items-center")}>
       { isLoading && (

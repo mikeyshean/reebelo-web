@@ -1,5 +1,6 @@
 "use client"
 import '../styles/globals.css'
+import 'react-tooltip/dist/react-tooltip.css'
 import {
     QueryClient,
     QueryClientProvider,

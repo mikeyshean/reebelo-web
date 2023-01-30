@@ -9,6 +9,8 @@ import { ValidationMessage } from '@/components/Forms/ValidationMessage'
 import { formatPriceFromDigits } from '@/components/utils'
 import { InputWithAddon } from '@/components/Forms/InputWithAddon'
 import { useProductContext } from './context'
+import { AdjustQuantityInput } from './components/AdjustQuantityInput'
+import { AdjustQuantityType } from './types'
 
 
 export default function MutateProductModal(
@@ -26,13 +28,29 @@ export default function MutateProductModal(
   const apiCreateProduct = api.products.useCreate()
   const apiEditProduct = api.products.useEdit()
   const { ctxProductName, ctxProductId, ctxPrice, setCtxPrice, setCtxProductName } = useProductContext()
-  const [quantityValue, setQuantityValue] = useState('')
-  // const [priceValue, setCtxPrice] = useState('')
+  const [totalQuantity, setTotalQuantity] = useState('')
   const [isValidName, setIsValidName] = useState(true)
   const [isValidQuantity, setIsValidQuantity] = useState(true)
   const [isValidPrice, setIsValidPrice] = useState(true)
   const [isUniqueError, setIsUniqueError] = useState(false)
+  const [isValidAdjustedQuantity, setIsValidAdjustedQuantity] = useState(true)
+  const {
+    ctxAdjustedQuantity,
+    setCtxAdjustedQuantity,
+    ctxAdjustQuantityType,
+    setCtxAdjustQuantityType
+  } = useProductContext()
   const queryClient = useQueryClient()
+
+  function validateAdjustedQuantity(value: string) {
+    const digits = Number(value.replace(/\D/g,''))
+    if (isNaN(digits)) {
+      setIsValidAdjustedQuantity(false)
+      return
+    }    
+    setCtxAdjustedQuantity(String(digits))
+    setIsValidAdjustedQuantity(true)
+  }
 
   async function handleOnSubmit() {
     let isValid = true
@@ -41,10 +59,17 @@ export default function MutateProductModal(
       isValid = false
     }
 
-    const quantity = parseInt(quantityValue)
-    if (isNaN(quantity) || quantity < 0) {
-      setIsValidQuantity(false)
-      isValid = false
+    if (isEditForm) {
+      if (!isValidQuantityAdjustment()) {
+        setIsValidAdjustedQuantity(false)
+        isValid = false
+      }
+    } else {
+      const quantity = parseInt(totalQuantity)
+      if (isNaN(quantity) || quantity < 0) {
+        setIsValidQuantity(false)
+        isValid = false
+      }
     }
 
     const price = parseFloat(ctxPrice)
@@ -57,14 +82,28 @@ export default function MutateProductModal(
       return
     }
 
-    if (isEditForm && ctxProductId && ctxProductName) {
+    if (isEditForm && ctxProductId) {
+      const mutateData: {
+        id: string,
+        name: string
+        price: string,
+        increaseQuantity?: string,
+        decreaseQuantity?: string
+      } = {
+        id: ctxProductId,
+        name: ctxProductName,
+        price: ctxPrice!,
+      }
+      
+      if (ctxAdjustQuantityType == AdjustQuantityType.INCREASE) {
+        mutateData.increaseQuantity = ctxAdjustedQuantity
+      }
+      if (ctxAdjustQuantityType == AdjustQuantityType.DECREASE) {
+          mutateData.decreaseQuantity = ctxAdjustedQuantity
+      } 
+
       apiEditProduct.mutate(
-        {
-          id: ctxProductId,
-          name: ctxProductName,
-          quantity: quantityValue,
-          price: ctxPrice!
-        },
+        mutateData,
         {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["products"] })
@@ -83,9 +122,9 @@ export default function MutateProductModal(
     } else {
       apiCreateProduct.mutate(
         {
-          name: ctxProductName!,
-          quantity: quantityValue,
-          price: ctxPrice!
+          name: ctxProductName,
+          quantity: totalQuantity,
+          price: ctxPrice
         }, 
         {
           onSuccess: () => {
@@ -106,6 +145,15 @@ export default function MutateProductModal(
     }
   }
 
+  function isValidQuantityAdjustment() {
+    const quantity = parseInt(ctxAdjustedQuantity)
+    return !isNaN(quantity) && 
+      (quantity > 0 && (
+      ctxAdjustQuantityType === AdjustQuantityType.DECREASE  ||
+      ctxAdjustQuantityType === AdjustQuantityType.INCREASE
+      )) || (quantity === 0 && ctxAdjustQuantityType === AdjustQuantityType.NONE)
+  }
+
   function validateProductName(value: string) {
     if (!value) {
       setIsValidName(false)
@@ -121,7 +169,7 @@ export default function MutateProductModal(
       setIsValidQuantity(false)
     } else {
       setIsValidQuantity(true)
-      setQuantityValue(String(digits))
+      setTotalQuantity(String(digits))
     }
   }
   
@@ -145,6 +193,8 @@ export default function MutateProductModal(
     if (show && !isEditForm) {
       setCtxProductName('')
       setCtxPrice('')
+      setCtxAdjustedQuantity('0')
+      setCtxAdjustQuantityType(AdjustQuantityType.NONE)
     }
     resetValidations()
   }, [show])
@@ -181,16 +231,19 @@ export default function MutateProductModal(
       </InputWithAddon>
 
       {/* Quantity */}
-      <Input 
-        name="quantity-name"
-        placeholder="1"
-        value={quantityValue}
-        label="Quantity"
-        onChange={validateQuantity}
-        isValid={isValidQuantity}
-      >
-        <ValidationMessage id="quantity-error" message="Quantity is required." isValid={isValidQuantity} />
-      </Input>
+      {isEditForm && <AdjustQuantityInput isValid={isValidAdjustedQuantity} onChange={validateAdjustedQuantity} />}
+      {!isEditForm && 
+        <Input 
+          name="quantity-name"
+          placeholder="1"
+          value={totalQuantity}
+          label="Quantity"
+          onChange={validateQuantity}
+          isValid={isValidQuantity}
+        >
+          <ValidationMessage id="quantity-error" message="Quantity is required." isValid={isValidQuantity} />
+        </Input>
+      }
 
     </Modal>
   )

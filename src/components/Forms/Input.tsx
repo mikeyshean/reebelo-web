@@ -1,8 +1,10 @@
 import { classNames } from "@/components/utils";
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { Tooltip } from 'react-tooltip'
 
 export function Input({ 
-  name, value, label, isValid, onChange, placeholder, describedBy, children }: 
+  name, value, label, isValid, onChange, placeholder, describedBy, children, tooltipText, tooltipId }: 
   { 
     name: string,
     value: string,
@@ -11,6 +13,8 @@ export function Input({
     onChange: (value: string) => void,
     placeholder?: string,
     describedBy?: string,
+    tooltipText?: string,
+    tooltipId?: string,
     children: React.ReactNode
   }) {
   
@@ -18,6 +22,20 @@ export function Input({
     <div>
       <label htmlFor={name} className="block text-sm font-medium text-black mt-5">
         {label}
+        {tooltipText && tooltipId &&
+          <>
+            <button className="pl-4" id={tooltipId} data-tooltip-content={tooltipText}>
+              <InformationCircleIcon
+                className={classNames(
+                  'text-indigo-300 hover:text-indigo-500',
+                  'h-5 w-5 relative top-1 right-2'
+                )}
+                aria-hidden="true"
+              />
+            </button>
+            <Tooltip anchorId={tooltipId} />
+          </>
+        }
       </label>
       <div className="relative mt-1 rounded-md shadow-sm">
         <input
