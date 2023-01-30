@@ -2,7 +2,7 @@ import { api } from "@/api"
 import { Input } from "@/components/Forms/Input"
 import { InputWithAddon } from "@/components/Forms/InputWithAddon"
 import { EmptySelectItem, Select, SelectItem } from "@/components/Forms/Select"
-import { OrderType } from "api/routers/schema"
+import { ListTrackingCompaniesType, OrderType, ShipmentType } from "api/schema"
 import { useState } from "react"
 import { useOrderContext } from "./context"
 
@@ -11,13 +11,6 @@ const countries = [
   { key: 2, value: "Singapore"},
   { key: 3, value: "Australia"},
   { key: 4, value: "New Zealand"}
-]
-
-const trackingCompanies = [
-  { key: 1, value: "DHL"},
-  { key: 2, value: "UPS"},
-  { key: 3, value: "FedEx"},
-  { key: 4, value: "Standard Mail Carrier"}
 ]
 
 const orderStatuses = [
@@ -34,16 +27,63 @@ export default function EditOrder() {
       setSelectedStatus(orderStatuses.find(item => item.value.toLowerCase() === data.status) || EmptySelectItem)
     } 
   })
+  api.shipments.useGetByOrderId({
+    orderId: ctxOrderId, 
+    onSuccess: (data: ShipmentType) => {
+      const trackingCompany = data.trackingCompany
+      if (trackingCompany && trackingCompany.id) {
+        setSelectedTrackingCompany({key: trackingCompany.id, value: trackingCompany.name})
+      }
+      if (data.trackingNumber && trackingNumber !== data.trackingNumber) {
+        setTrackingNumber(data.trackingNumber)
+      }
+    } 
+  })
+  api.shipments.useListTrackingCompanies({
+    onSuccess: (data: ListTrackingCompaniesType) => {
+      formatTrackingCompanyItems(data)
+    }
+  })
+
+  const apiUpsertOrderShipment = api.orders.useUpsertShipment()
   const [selectedCountry, setSelectedCountry] = useState<SelectItem>(EmptySelectItem)
   const [selectedTrackingCompany, setSelectedTrackingCompany] = useState<SelectItem>(EmptySelectItem)
+  const [trackingCompanyItems, setTrackingCompanyItems] = useState<SelectItem[]>([])
   const [selectedStatus, setSelectedStatus] = useState<SelectItem>(EmptySelectItem)
+  const [trackingNumber, setTrackingNumber] = useState('')
   
   function toggleEditForm() {
     setCtxOrderId('')
   }
 
+  function formatTrackingCompanyItems(data: ListTrackingCompaniesType) {
+    const items = data.map((item) => { return {key: item.id, value: item.name }})
+    setTrackingCompanyItems(items)
+  }
+
+  function handleSubmit(event: React.SyntheticEvent) {
+    event.preventDefault()
+    apiUpsertOrderShipment.mutate(
+      {
+        id: ctxOrderId,
+        trackingNumber: trackingNumber,
+        trackingCompanyId: selectedTrackingCompany.key as string,
+        recipientName: "me"
+      },
+      {
+        onSuccess: () => {
+          toggleEditForm()
+        }
+      }
+    )
+  }
+
+  function handleTrackingNumberOnChange(value: string) {
+    setTrackingNumber(value)
+  }
+
   return (
-    <form className="space-y-6" action="#" method="POST">
+    <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
       <div className="bg-white px-4 py-5 shadow shadow-gray-300 sm:rounded-lg sm:p-6">
         <div className="md:grid md:grid-cols-3 md:gap-6">
           <div className="md:col-span-1">
@@ -232,23 +272,21 @@ export default function EditOrder() {
                 <Select
                   selected={selectedTrackingCompany}
                   onChange={setSelectedTrackingCompany}
-                  items={trackingCompanies}
+                  items={trackingCompanyItems}
                   name="Tracking Company"
                 >
                 </Select>
               </div>
                 
               <div className="col-span-6 sm:col-span-4">
-                <label htmlFor="full-name" className="block text-sm font-medium text-black">
-                  Tracking #
-                </label>
-                <input
-                  type="text"
-                  name="full-name"
-                  id="full-name"
-                  autoComplete="given-name"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                />
+                <Input
+                  name="tracking-number"
+                  value={trackingNumber}
+                  label="Tracking #"
+                  isValid={true}
+                  onChange={handleTrackingNumberOnChange}
+                >
+                </Input>
               </div>
             </div>
           </div>

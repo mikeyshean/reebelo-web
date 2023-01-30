@@ -1,6 +1,6 @@
 import { fetcher } from "./fetcher";
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { ListProductSchema, ProductSchema } from "./schema";
+import { ListProductSchema, ProductSchema } from "../schema";
 
 
 export const productRouter =  {
