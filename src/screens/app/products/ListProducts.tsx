@@ -95,7 +95,7 @@ export function ProductsPage() {
               <div className="shadow-sm ring-1 ring-black ring-opacity-5">
                 <table className="min-w-full border-separate" style={{ borderSpacing: 0 }}>
                   <thead className="bg-gray-50">
-                    <tr>
+                    <tr className="divide-x divide-gray-200">
                       <th
                         scope="col"
                         className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
@@ -106,7 +106,7 @@ export function ProductsPage() {
                         scope="col"
                         className="sticky top-0 z-10 hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
                       >
-                        Price
+                        Unit Price
                       </th>
                       <th
                         scope="col"
@@ -117,14 +117,15 @@ export function ProductsPage() {
                       <th
                         scope="col"
                         className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pr-4 pl-3 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
-                      >
+                      > 
+                        <span className="text-gray-900 text-sm">Actions</span>
                         <span className="sr-only">Create Order, Edit, Delete</span>
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white">
+                  <tbody className="bg-white divide-x divide-gray-200">
                     {products?.map((product, idx) => (
-                      <tr key={product.id}>
+                      <tr key={product.id} className="divide-x divide-gray-200">
                         <td
                           className={classNames(
                             idx !== products.length - 1 ? 'border-b border-gray-200' : '',
@@ -152,7 +153,7 @@ export function ProductsPage() {
                         <td
                           className={classNames(
                             idx !== products.length - 1 ? 'border-b border-gray-200' : '',
-                            'flex justify-end whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-6 lg:pr-8'
+                            'flex justify-evenly whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-6 lg:pr-8'
                           )}
                         >
                           <button className="text-indigo-600 hover:text-black" onClick={(() => handleCreateOrderOnClick(product.id, product.name, product.price))}>

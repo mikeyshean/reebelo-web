@@ -1,43 +1,19 @@
 import { api } from "@/api"
-import { classNames, formatFloatStringToPrice } from "@/components/utils"
+import { capitalize, classNames, formatFloatStringToPrice } from "@/components/utils"
 import { PencilSquareIcon, TrashIcon, ShoppingCartIcon } from "@heroicons/react/24/outline"
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
+import { useOrderContext } from "./context"
 
 
-export function OrdersPage() {
+export function ListOrders() {
   const { data: orders } = api.orders.useList()
   const apiDeleteOrder = api.orders.useDelete()
-  const [showProductModal, setShowProductModal] = useState(false)
-  const [showOrderModal, setShowOrderModal] = useState(false)
-  const [isEditForm, setIsEditForm] = useState(false)
+  const { setCtxOrderId } = useOrderContext()
   const queryClient = useQueryClient()
 
-  function toggleProductModal() {
-    setShowProductModal(!showProductModal)
-  }
-  
-  function toggleOrderModal() {
-    setShowOrderModal(!showOrderModal)
-  }
-
-  function handleAddProductOnClick() {
-    setIsEditForm(false)
-    setShowProductModal(true)
-  }
-
-  function handleEditForm(
-  ) {
-    setIsEditForm(true)
-    setShowProductModal(true)
-  }
-
-  function handleCreateOrderOnClick(
-    id: string,
-    productName: string,
-    price: string,
-  ) {
-    setShowOrderModal(true)
+  function handleEditForm(id: string) {
+    setCtxOrderId(id)
   }
 
   function handleDelete(id: string) {
@@ -62,7 +38,7 @@ export function OrdersPage() {
               <div className="shadow-sm ring-1 ring-black ring-opacity-5">
                 <table className="min-w-full border-separate" style={{ borderSpacing: 0 }}>
                   <thead className="bg-gray-50">
-                    <tr>
+                    <tr className="divide-x divide-gray-200">
                       <th
                         scope="col"
                         className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
@@ -109,13 +85,14 @@ export function OrdersPage() {
                         scope="col"
                         className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pr-4 pl-3 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
                       >
+                        <span className="text-gray-900 text-sm">Actions</span>
                         <span className="sr-only">Edit</span>
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white">
+                  <tbody className="bg-white divide-x divide-gray-200">
                     {orders?.map((order, idx) => (
-                      <tr key={order.id}>
+                      <tr key={order.id} className="divide-x divide-gray-200">
                         <td
                           className={classNames(
                             idx !== orders.length - 1 ? 'border-b border-gray-200' : '',
@@ -136,7 +113,7 @@ export function OrdersPage() {
                             order.status === "delivered" ? "bg-green-100 text-green-800" : "",
                             "inline-flex rounded-full px-2 text-xs font-semibold leading-5"
                             )}>
-                            {order.status}
+                            {capitalize(order.status)}
                           </span>
                         </td>
                         <td
@@ -174,10 +151,18 @@ export function OrdersPage() {
                         <td
                           className={classNames(
                             idx !== orders.length - 1 ? 'border-b border-gray-200' : '',
-                            'flex justify-end whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-6 lg:pr-8'
+                            'whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden lg:table-cell'
                           )}
                         >
-                          <button className="text-indigo-600 hover:text-black pl-4" onClick={(() => handleEditForm())}>
+                          123234
+                        </td>
+                        <td
+                          className={classNames(
+                            idx !== orders.length - 1 ? 'border-b border-gray-200' : '',
+                            'flex justify-evenly whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-6 lg:pr-8'
+                          )}
+                        >
+                          <button className="text-indigo-600 hover:text-black pl-4" onClick={(() => handleEditForm(order.id))}>
                             <PencilSquareIcon
                                 className={classNames(
                                   'text-indigo-300 hover:text-indigo-500',

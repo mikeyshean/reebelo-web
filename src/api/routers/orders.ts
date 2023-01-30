@@ -19,6 +19,13 @@ export const orderRouter =  {
     }
     return useMutation({ mutationKey: ['orders'], mutationFn: mutationFn })
   },
+  useGet: ({ id, ...args }: { id: string, [key: string]: any }) => {
+    const queryFn = async () => { 
+      const response = await fetcher(`/api/orders/${id}`)
+      return OrderSchema.parse(response)
+    }
+    return useQuery({ queryKey: ['orders', id], queryFn: queryFn, ...args })
+  },
   useDelete: () => {
     const mutationFn = async (data: { id: string }) => { 
       const response = await fetcher(`/api/orders/${data.id}`, { method: "DELETE" })

@@ -33,3 +33,5 @@ export const OrderSchema = z.object({
 
 export const ListOrderSchema = OrderSchema.array()
 
+export type OrderType = z.infer<typeof OrderSchema>
+

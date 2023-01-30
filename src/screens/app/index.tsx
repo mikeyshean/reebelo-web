@@ -2,7 +2,7 @@ import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import { useState } from 'react'
-import { OrdersPage } from './orders/ListOrders'
+import { OrderIndex } from './orders'
 import { ProductIndex } from './products'
 
 type NavType = {
@@ -12,7 +12,7 @@ type NavType = {
 
 const navigation = [
   { name: 'Products', component: <ProductIndex /> },
-  { name: 'Orders', component: <OrdersPage /> },
+  { name: 'Orders', component: <OrderIndex /> },
 ]
 
 function classNames(...classes: string[]) {
@@ -80,9 +80,9 @@ export default function App() {
                         key={item.name}
                         as="button"
                         className={classNames(
-                          item === selected
-                            ? 'bg-indigo-700 text-white'
-                            : 'text-white hover:bg-indigo-500 hover:bg-opacity-75',
+                          item === selected 
+                          ? 'bg-reebelo-100 text-black'
+                          : 'text-reebelo-100 hover:bg-indigo-500 hover:bg-opacity-75',
                           'block rounded-md py-2 px-3 text-base font-medium'
                         )}
                         aria-current={item === selected ? 'page' : undefined}
@@ -105,7 +105,7 @@ export default function App() {
 
         <main className="-mt-32">
           <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-            <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
+            <div className="rounded-lg bg-white px-5 py-6 shadow shadow-gray-400 sm:px-6">
               {selected && selected.component}
             </div>
           </div>
