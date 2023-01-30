@@ -27,8 +27,9 @@ export default function EditOrder() {
       setSelectedStatus(orderStatuses.find(item => item.value.toLowerCase() === data.status) || EmptySelectItem)
     } 
   })
-  api.shipments.useGetByOrderId({
-    orderId: ctxOrderId, 
+  api.orders.useGetOrderShipment({
+    id: ctxOrderId, 
+    retry: false,
     onSuccess: (data: ShipmentType) => {
       const trackingCompany = data.trackingCompany
       if (trackingCompany && trackingCompany.id) {

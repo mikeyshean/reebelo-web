@@ -1,6 +1,6 @@
 import { fetcher } from "./fetcher";
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { ListOrderSchema, OrderSchema, OrderShipmentSchema, ShipmentSchema } from "../schema";
+import { ListOrderSchema, ListShipmentSchema, OrderSchema, ShipmentSchema } from "../schema";
 
 
 export const orderRouter =  {
@@ -33,6 +33,13 @@ export const orderRouter =  {
     }
     return useMutation({ mutationKey: ['orders'], mutationFn: mutationFn })
   },
+  useGetOrderShipment: ({ id, ...args }: { id: string, [key: string]: any }) => {
+    const queryFn = async () => { 
+      const response = await fetcher(`/api/orders/${id}/shipments`)
+      return ShipmentSchema.parse(response)
+    }
+    return useQuery({ queryKey: ['orders', 'shipments', id], queryFn: queryFn, ...args })
+  },
   useUpsertShipment: () => {
     const mutationFn = async (
       data: { 
@@ -42,14 +49,14 @@ export const orderRouter =  {
         recipientName: string
       }
     ) => { 
-      const putData = {
+      const postData = {
         tracking_number: data.trackingNumber,
         tracking_company_id: data.trackingCompanyId,
         recipient_name: data.recipientName
       }
 
-      const response = await fetcher(`/api/orders/${data.id}/shipments`, { method: "PUT", data: putData })
-      return OrderShipmentSchema.parse(response)
+      const response = await fetcher(`/api/orders/${data.id}/shipments`, { method: "PUT", data: postData })
+      return ShipmentSchema.parse(response)
     }
     return useMutation({ mutationKey: ['shipments'], mutationFn: mutationFn })
   },
