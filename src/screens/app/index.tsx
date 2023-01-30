@@ -1,11 +1,18 @@
 import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
+import { useState } from 'react'
+import { OrdersPage } from './orders/ListOrders'
 import { ProductIndex } from './products'
 
+type NavType = {
+  name: string,
+  component?: React.ReactNode
+}
+
 const navigation = [
-  { name: 'Products', href: '#', current: true },
-  { name: 'Orders', href: '#', current: false },
+  { name: 'Products', component: <ProductIndex /> },
+  { name: 'Orders', component: <OrdersPage /> },
 ]
 
 function classNames(...classes: string[]) {
@@ -13,6 +20,8 @@ function classNames(...classes: string[]) {
 }
 
 export default function App() {
+  const [selected, setSelected] = useState<NavType>(navigation[0])
+
   return (
     <>
       <div className="min-h-full">
@@ -29,19 +38,19 @@ export default function App() {
                       <div className="hidden lg:ml-10 lg:block">
                         <div className="flex space-x-4">
                           {navigation.map((item) => (
-                            <a
+                            <button
                               key={item.name}
-                              href={item.href}
                               className={classNames(
-                                item.current
+                                item === selected
                                   ? 'bg-reebelo-100 text-black'
                                   : 'text-reebelo-100 hover:bg-indigo-500 hover:bg-opacity-75',
                                 'rounded-md py-2 px-3 text-sm font-medium'
                               )}
-                              aria-current={item.current ? 'page' : undefined}
+                              aria-current={item === selected ? 'page' : undefined}
+                              onClick={() => setSelected(item)}
                             >
                               {item.name}
-                            </a>
+                            </button>
                           ))}
                         </div>
                       </div>
@@ -69,15 +78,15 @@ export default function App() {
                     {navigation.map((item) => (
                       <Disclosure.Button
                         key={item.name}
-                        as="a"
-                        href={item.href}
+                        as="button"
                         className={classNames(
-                          item.current
+                          item === selected
                             ? 'bg-indigo-700 text-white'
                             : 'text-white hover:bg-indigo-500 hover:bg-opacity-75',
                           'block rounded-md py-2 px-3 text-base font-medium'
                         )}
-                        aria-current={item.current ? 'page' : undefined}
+                        aria-current={item === selected ? 'page' : undefined}
+                        onClick={() => setSelected(item)}
                       >
                         {item.name}
                       </Disclosure.Button>
@@ -89,7 +98,7 @@ export default function App() {
           </Disclosure>
           <header className="py-10">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <h1 className="text-3xl font-bold tracking-tight text-reebelo-100">Products</h1>
+              <h1 className="text-3xl font-bold tracking-tight text-reebelo-100">{selected.name}</h1>
             </div>
           </header>
         </div>
@@ -97,7 +106,7 @@ export default function App() {
         <main className="-mt-32">
           <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
             <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
-              <ProductIndex />
+              {selected && selected.component}
             </div>
           </div>
         </main>

@@ -47,7 +47,6 @@ export default function CreateOrderModal(
           toggleModal()
         },
         onError: (error) => {
-          console.log(error)
           if (error instanceof ApiError) {
             if (error.errorCode == API_ERROR.INSUFFICIENT_QUANTITY) {
               setIsOutOfStockError(true)

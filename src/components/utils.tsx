@@ -3,6 +3,11 @@ export function classNames(...classes: string[]) {
 }
 
 export function formatPriceFromDigits(digits: number) {
+  // Converts integer to float where last two digits are to the right of the decimal
   const digitStr = String(digits).padStart(3, '0')
   return digitStr.slice(0, digitStr.length-2) + '.' + digitStr.slice(-2)
+}
+
+export function formatFloatStringToPrice(price: string) {
+  return parseFloat(parseFloat(price).toFixed(2)).toLocaleString("en-US", { minimumFractionDigits: 2 })
 }
