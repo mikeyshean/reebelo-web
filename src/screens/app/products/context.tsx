@@ -24,7 +24,7 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
   const [ ctxPrice, setCtxPrice ] = useState<string>('')
   const [ ctxAdjustedQuantity, setCtxAdjustedQuantity ] = useState<string>('0')
   const [ ctxTotalQuantity, setCtxTotalQuantity ] = useState<string>('')
-  const [ ctxAdjustQuantityType, setCtxAdjustQuantityType ] = useState<AdjustQuantityType>(AdjustQuantityType.INCREASE)
+  const [ ctxAdjustQuantityType, setCtxAdjustQuantityType ] = useState<AdjustQuantityType>(AdjustQuantityType.NONE)
 
   return (
     <ProductContext.Provider value={{ 
