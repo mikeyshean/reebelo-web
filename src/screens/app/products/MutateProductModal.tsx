@@ -214,7 +214,7 @@ export default function MutateProductModal(
       {/* Product Name */}
       <Input 
         name="product-name"
-        placeholder="MyProduct"
+        placeholder="iPhone 14 Pro"
         value={ctxProductName}
         label="Product Name"
         onChange={validateProductName}
