@@ -7,7 +7,20 @@ export const ProductSchema = z.object({
   quantity: z.number(),
 })
 
-export const ListProductSchema = ProductSchema.array()
+export const ListProductSchema = z.object({
+  links: z.object({
+    next: z.string().nullable(),
+    previous: z.string().nullable()
+  }),
+  count: z.number(),
+  total_pages: z.number(),
+  results: ProductSchema.array()
+}).transform((input) => ({
+  links: input.links,
+  count: input.count,
+  totalPages: input.total_pages,
+  results: input.results
+}))
 
 export const OrderProductSchema = z.object({
   id: z.string(),

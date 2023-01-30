@@ -11,7 +11,7 @@ import MutateProductModal from "./MutateProductModal"
 
 
 export function ProductsPage() {
-  const { data: products } = api.products.useList()
+  const { data: productPage } = api.products.useList()
   const apiDeleteProduct = api.products.useDelete()
   const [showProductModal, setShowProductModal] = useState(false)
   const [showOrderModal, setShowOrderModal] = useState(false)
@@ -134,11 +134,11 @@ export function ProductsPage() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-x divide-gray-200">
-                    {products?.map((product, idx) => (
+                    {productPage?.results?.map((product, idx) => (
                       <tr key={product.id} className="divide-x divide-gray-200">
                         <td
                           className={classNames(
-                            idx !== products.length - 1 ? 'border-b border-gray-200' : '',
+                            idx !== productPage?.results.length - 1 ? 'border-b border-gray-200' : '',
                             'whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8'
                           )}
                         >
@@ -146,7 +146,7 @@ export function ProductsPage() {
                         </td>
                         <td
                           className={classNames(
-                            idx !== products.length - 1 ? 'border-b border-gray-200' : '',
+                            idx !== productPage?.results.length - 1 ? 'border-b border-gray-200' : '',
                             'whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden sm:table-cell'
                           )}
                         >
@@ -154,7 +154,7 @@ export function ProductsPage() {
                         </td>
                         <td
                           className={classNames(
-                            idx !== products.length - 1 ? 'border-b border-gray-200' : '',
+                            idx !== productPage?.results.length - 1 ? 'border-b border-gray-200' : '',
                             'whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden lg:table-cell'
                           )}
                         >
@@ -162,7 +162,7 @@ export function ProductsPage() {
                         </td>
                         <td
                           className={classNames(
-                            idx !== products.length - 1 ? 'border-b border-gray-200' : '',
+                            idx !== productPage?.results.length - 1 ? 'border-b border-gray-200' : '',
                             'flex justify-evenly whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-6 lg:pr-8'
                           )}
                         >
