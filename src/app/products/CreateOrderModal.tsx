@@ -8,6 +8,7 @@ import { ValidationMessage } from '@/components/Forms/ValidationMessage'
 import { InputWithAddon } from '@/components/Forms/InputWithAddon'
 import { useProductContext } from './context'
 import { useRouter } from 'next/navigation'
+import { formatFloatStringToPrice } from '@/components/utils'
 
 
 export default function CreateOrderModal(
@@ -77,7 +78,11 @@ export default function CreateOrderModal(
   }
 
   function getTotalPrice() {
-    return (parseFloat(ctxPrice) * parseFloat(quantityValue)).toFixed(2)
+    return formatFloatStringToPrice((parseFloat(ctxPrice) * parseFloat(quantityValue)).toFixed(2))
+  }
+
+  function getUnitPrice() {
+    return formatFloatStringToPrice(ctxPrice)
   }
 
   useEffect(() => {
@@ -106,7 +111,7 @@ export default function CreateOrderModal(
         <InputWithAddon
           name="total-"
           placeholder="0.00"
-          value={ctxPrice}
+          value={getUnitPrice()}
           label="Unit Price"
           onChange={() => {}}
           isValid={true}

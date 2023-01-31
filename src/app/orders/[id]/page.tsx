@@ -3,6 +3,7 @@ import { api } from "@/api"
 import { Input } from "@/components/Forms/Input"
 import { InputWithAddon } from "@/components/Forms/InputWithAddon"
 import { EmptySelectItem, Select, SelectItem } from "@/components/Forms/Select"
+import { formatFloatStringToPrice } from "@/components/utils"
 import { XCircleIcon } from "@heroicons/react/24/outline"
 import { ListTrackingCompaniesType, OrderType, ShipmentType } from "api/schema"
 import Link from "next/link"
@@ -104,6 +105,14 @@ export default function EditOrder({ params }: { params: { id: string }}) {
     setTrackingNumber(value)
   }
 
+  function getUnitPrice() {
+    return formatFloatStringToPrice(order?.amountPerUnit || '')
+  }
+
+  function getTotalPrice() {
+    return formatFloatStringToPrice(order?.amountTotal || '')
+  }
+
   return (
     <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
       <div className="bg-white px-4 py-5 shadow shadow-gray-300 sm:rounded-lg sm:p-6 relative">
@@ -170,7 +179,7 @@ export default function EditOrder({ params }: { params: { id: string }}) {
                 <InputWithAddon
                   name="price-name"
                   placeholder="0.00"
-                  value={order?.amountPerUnit || ''}
+                  value={getUnitPrice()}
                   label="Unit Price"
                   onChange={()=>{}}
                   isValid={true}
@@ -186,7 +195,7 @@ export default function EditOrder({ params }: { params: { id: string }}) {
                 <InputWithAddon
                   name="total-price-name"
                   placeholder="0.00"
-                  value={order?.amountTotal || ''}
+                  value={getTotalPrice()}
                   label="Total Price"
                   onChange={()=>{}}
                   isValid={true}
