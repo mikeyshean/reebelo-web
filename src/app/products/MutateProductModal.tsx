@@ -5,7 +5,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { ApiError, API_ERROR } from 'api/errors'
 import { Input } from '@/components/Forms/Input'
 import { ValidationMessage } from '@/components/Forms/ValidationMessage'
-import { formatPriceFromDigits } from '@/components/utils'
+import { formatFloatStringToPrice, formatPriceFromDigits } from '@/components/utils'
 import { InputWithAddon } from '@/components/Forms/InputWithAddon'
 import { useProductContext } from './context'
 import { AdjustQuantityInput } from './components/AdjustQuantityInput'
@@ -231,7 +231,7 @@ export default function MutateProductModal(
       <InputWithAddon
         name="price-name"
         placeholder="0.00"
-        value={ctxPrice}
+        value={formatFloatStringToPrice(ctxPrice)}
         label="Unit Price"
         onChange={validatePrice}
         isValid={isValidPrice}
