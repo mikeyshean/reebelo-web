@@ -7,7 +7,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import { useState } from 'react'
 
 const navigation = [
-  { name: 'Home', href: '/', pattern: /^\/$/ },
+  { name: 'Project Overview', href: '/', pattern: /^\/$/ },
   { name: 'Products', href: '/products', pattern: /^\/products\/?$/ },
   { name: 'Orders', href: '/orders', pattern: /^\/orders\/?$/ },
   { name: 'Edit Order', href: '/orders', pattern: /^\/orders\/[a-z0-9-]+$/ },
@@ -45,7 +45,9 @@ export default function App({children}: {
                   <div className="relative flex h-16 items-center justify-between lg:border-b lg:border-reebelo-100 lg:border-opacity-25">
                     <div className="flex items-center px-2 lg:px-0">
                       <div className="flex-shrink-0">
-                        <Image src='/reeb.svg' alt="Reebelo Logo" height={40} width={40} />
+                        <a href="/">
+                          <Image src='/reeb.svg' alt="Reebelo Logo" height={40} width={40} />
+                        </a>
                       </div>
                       <div className="hidden lg:ml-10 lg:block">
                         <div className="flex space-x-4">

@@ -1,0 +1,114 @@
+import { ArticleLayout } from '@/components/mdx/ArticleLayout'
+import { SuperImage } from '@/components/mdx/SuperImage'
+import { Button } from '@/components/Button'
+import Link from 'next/link'
+import erdImage from '../assets/erd.png'
+import apiImage from '../assets/api.png'
+
+export const meta = {
+  author: 'Mikey Shean',
+  date: '2022-12-28',
+  title: 'Reebelo Case Study',
+  description:
+    'This JavaScript based browser game is a reboot of one of my final capstone projects that I built for demo day at App Academy back in 2015.  As you can imagine, it holds some sentimental value for me, but it\'s been over seven years since this project has been live for all the world to enjoy.'
+}
+
+
+
+export default (props) => <ArticleLayout meta={meta} {...props} />
+
+This is a full stack application for product and order management.  It consists of two 
+main pages <Link href="/products">Products</Link> and 
+<Link href="/orders">Orders</Link> with features that would allow an admin role to manage 
+product inventory and order status/tracking details.
+
+## Assumptions
+- Implemented for an Admin type role
+- As an admin product, I don't expect a ton of concurrent requests, but I also kept in mind that the API to 
+create Orders may be directly linked to the consumer purchase flow.
+
+## Core Features
+- Searchable products with infinite scroll
+- Create, Edit, and Delete products
+- Create, Edit, and Delete orders
+- Ability to add / remove incremental product inventory
+
+## Frontend Tech and Features
+- Next.js, React/TypeScript
+- TailwindCSS/UI for rapid prototyping
+- Zod schema validations
+- Toasts
+- Infinite Scroll
+- Products
+  - Shared modal form for Product mutation Create/Edit
+  - Delete
+- Orders
+  - Create through modal form directly from the Product list row
+  - Edit to update Order status and tracking info
+  - Delete
+- Deployed through Vercel
+  - Ideally, we&apos;d deploy the FE to multiple regions as close to the end user as possible
+  - Serve static assets via CDN
+
+
+
+## Service API Summary
+export const api = {
+  src: apiImage,
+  center: true,
+  square: true,
+  priority: true
+}
+
+<SuperImage {...api} />
+
+## ERD
+
+export const erd = {
+  src: erdImage,
+  center: true,
+  square: true,
+  priority: true
+}
+
+
+<SuperImage {...erd} />
+
+## Backend Tech and Features
+- Python/Django RESTful API
+- Developed in a monorepo, but structured such that it could be
+broken out into several micro services if needed to scale independently
+    - Products Service
+    - Orders Service
+    - Shipments Service
+- Cursor pagination with search query for List Products API
+- Data consistency by locking product during quantity adjustments
+- Deployed with AWS Copilot as a Load balanced service
+- Running t3 micro free tier DB, because I'm not paying for Aurora
+- Dockerized and basic CI/CD via AWS CodePipeline -> ECR -> ECS
+
+## Pros
+- Implemented as three services: Product, Orders, Shipments
+- Can be broken down into these logical microservices
+- Searchable product inventory with infinite scroll to handle a decently large dataset
+- Consistency consideration for product quantity and exception handling for invalid state:
+  - Trying to create order with quantity that isn&apos;t available
+  - Trying to remove more than exists
+
+## Cons
+- Locked row cannot be read in current implementation.  We'd probably want a caching layer like Redis/Memcached anyway
+which would allow stale data to be read while locked.  We <i>should</i> only need to directly 
+query the DB and lock when we want to make modifications to the quantity and validate when creating an order.  
+- I&apos;m currently using built-in Postgres full-text search for Product search.  This will not be so straightforward if we need to start sharding 
+our Product DB as we would still need to query all shards for this type of search.  An optimal solution at scale would be to use 
+ElasticSearch.  It&apos;s probably what you&apos;re already using for the customer facing experience and has features like completion suggester 
+and category aggregations.
+
+## If I had infinite time...
+- Add caching layer in front of DB
+- ElasticSearch
+- Multiple products per order
+- Nicer UI with loading indicators for async actions
+- Product photos
+- Product categories, brands, colors
+- Shipping address

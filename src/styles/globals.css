@@ -6,3 +6,18 @@
 input::placeholder {
     color: rgb(156 163 175);
 }
+
+.prose :where(a):not(:where([class~="not-prose"] *)) {
+    text-decoration: underline;
+    color:rgb(44,63,225)
+}
+
+.prose a.underline {
+    text-decoration: underline;
+    text-decoration-color: var(--tw-prose-underline);
+}
+
+.prose li {
+    list-style: disc;
+    margin-left: 25px;
+}
