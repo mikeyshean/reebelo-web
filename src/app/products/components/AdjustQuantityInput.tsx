@@ -1,6 +1,6 @@
 import { Input } from "@/components/Forms/Input";
 import { ValidationMessage } from "@/components/Forms/ValidationMessage";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useProductContext } from "../context";
 import { XCircleIcon } from "@heroicons/react/24/outline"
 import { classNames } from "@/components/utils";
