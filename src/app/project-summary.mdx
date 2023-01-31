@@ -33,26 +33,7 @@ create Orders may be directly linked to the consumer purchase flow.
 - Create, Edit, and Delete orders
 - Ability to add / remove incremental product inventory
 
-## Frontend Tech and Features
-- Next.js, React/TypeScript
-- TailwindCSS/UI for rapid prototyping
-- Zod schema validations
-- Toasts
-- Infinite Scroll
-- Products
-  - Shared modal form for Product mutation Create/Edit
-  - Delete
-- Orders
-  - Create through modal form directly from the Product list row
-  - Edit to update Order status and tracking info
-  - Delete
-- Deployed through Vercel
-  - Ideally, we&apos;d deploy the FE to multiple regions as close to the end user as possible
-  - Serve static assets via CDN
-
-
-
-## Service API Summary
+## API and Services
 export const api = {
   src: apiImage,
   center: true,
@@ -74,24 +55,44 @@ export const erd = {
 
 <SuperImage {...erd} />
 
+## Frontend Tech and Features
+- <a href="https://github.com/mikeyshean/reebelo-web">Github Repo</a>
+- Next.js, React/TypeScript
+- TailwindCSS/UI for rapid prototyping
+- Zod schema validations
+- Toasts
+- Infinite Scroll
+- Products
+  - Shared modal form for Product mutation Create/Edit
+  - Delete
+- Orders
+  - Create through modal form directly from the Product list row
+  - Edit to update Order status and tracking info
+  - Delete
+- Deployed through Vercel
+  - Ideally, we&apos;d deploy the FE to multiple regions as close to the end user as possible
+  - Serve static assets via CDN
+
 ## Backend Tech and Features
+- <a href="https://github.com/mikeyshean/reebelo-backend">Github Repo</a>
 - Python/Django RESTful API
 - Developed in a monorepo, but structured such that it could be
-broken out into several micro services if needed to scale independently
+broken out into several microservices if needed to scale independently
     - Products Service
     - Orders Service
     - Shipments Service
 - Cursor pagination with search query for List Products API
 - Data consistency by locking product during quantity adjustments
-- Deployed with AWS Copilot as a Load balanced service
-- Running t3 micro free tier DB, because I'm not paying for Aurora
-- Dockerized and basic CI/CD via AWS CodePipeline -> ECR -> ECS
+- Deployed with AWS Copilot as a Load balanced service in a test env for quicker prototyping
+- Running t3 micro free tier PostgreSQL DB, because I'm not paying for Aurora
+- Seeded with 10,000 products
+- Dockerized and CI/CD via AWS CodePipeline -> ECR -> ECS
 
 ## Pros
 - Implemented as three services: Product, Orders, Shipments
-- Can be broken down into these logical microservices
-- Searchable product inventory with infinite scroll to handle a decently large dataset
-- Consistency consideration for product quantity and exception handling for invalid state:
+- Can be broken down into logical microservices
+- Searchable product inventory with infinite scroll to manage a large dataset
+- Consistency consideration for product quantity and exception handling for invalid states:
   - Trying to create order with quantity that isn&apos;t available
   - Trying to remove more than exists
 
