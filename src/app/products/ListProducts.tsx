@@ -9,11 +9,12 @@ import { useProductContext } from "./context"
 import CreateOrderModal from "./CreateOrderModal"
 import MutateProductModal from "./MutateProductModal"
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { Input } from "@/components/Forms/Input";
 
 
 export function ProductsPage() {
-  const { data: productPage, hasNextPage, fetchNextPage, refetch } = api.products.useList({
-  })
+  const [search, setSearch] = useState('apple')
+  const { data: productPage, hasNextPage, fetchNextPage, refetch } = api.products.useList({ search: search, enabled: !!search })
   const apiDeleteProduct = api.products.useDelete()
   const [infiniteDataLength, setInfiniteDataLength] = useState(0)
   const [showProductModal, setShowProductModal] = useState(false)
@@ -129,6 +130,16 @@ export function ProductsPage() {
         <div className="mt-8 flex flex-col">
           <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle">
+              <div className="pb-5 px-7">
+                <Input
+                  name="search-products"
+                  value={search}
+                  label="Search Products"
+                  isValid={true}
+                  onChange={setSearch}
+                >
+                </Input>
+              </div>
               <div className="shadow-sm ring-1 ring-black ring-opacity-5">
               <InfiniteScroll
                 next={() => {fetchNextPage()}}
