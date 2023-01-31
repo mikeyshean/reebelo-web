@@ -3,7 +3,9 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import { useState } from 'react'
 import { OrderIndex } from './orders'
+import { OrderProvider } from './orders/context'
 import { ProductIndex } from './products'
+
 
 type NavType = {
   name: string,
@@ -106,7 +108,9 @@ export default function App() {
         <main className="-mt-32">
           <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
             <div className="rounded-lg bg-white px-5 py-6 shadow shadow-gray-400 sm:px-6">
-              {selected && selected.component}
+              <OrderProvider>
+                {selected && selected.component}
+              </OrderProvider>
             </div>
           </div>
         </main>
