@@ -3,16 +3,12 @@ import { api } from "@/api"
 import { Input } from "@/components/Forms/Input"
 import { InputWithAddon } from "@/components/Forms/InputWithAddon"
 import { EmptySelectItem, Select, SelectItem } from "@/components/Forms/Select"
+import { XCircleIcon } from "@heroicons/react/24/outline"
 import { ListTrackingCompaniesType, OrderType, ShipmentType } from "api/schema"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-
-const countries = [
-  { key: 1, value: "United States"},
-  { key: 2, value: "Singapore"},
-  { key: 3, value: "Australia"},
-  { key: 4, value: "New Zealand"}
-]
+import { toast } from "react-toastify"
 
 const orderStatuses = [
   { key: 1, value: "Processing" },
@@ -47,7 +43,6 @@ export default function EditOrder({ params }: { params: { id: string }}) {
   })
 
   const apiUpsertShipment = api.shipments.useUpsert()
-  const [selectedCountry, setSelectedCountry] = useState<SelectItem>(EmptySelectItem)
   const [selectedTrackingCompany, setSelectedTrackingCompany] = useState<SelectItem>(EmptySelectItem)
   const [trackingCompanyItems, setTrackingCompanyItems] = useState<SelectItem[]>([])
   const [selectedStatus, setSelectedStatus] = useState<SelectItem>(EmptySelectItem)
@@ -70,6 +65,7 @@ export default function EditOrder({ params }: { params: { id: string }}) {
       },
       {
         onSuccess: () => {
+          toast.success("Updated successfully")
           router.push("/orders")
         }
       }
@@ -82,7 +78,7 @@ export default function EditOrder({ params }: { params: { id: string }}) {
 
   return (
     <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
-      <div className="bg-white px-4 py-5 shadow shadow-gray-300 sm:rounded-lg sm:p-6">
+      <div className="bg-white px-4 py-5 shadow shadow-gray-300 sm:rounded-lg sm:p-6 relative">
         <div className="md:grid md:grid-cols-3 md:gap-6">
           <div className="md:col-span-1">
             <h3 className="text-lg font-medium leading-6 text-black">Order Details</h3>
@@ -90,6 +86,13 @@ export default function EditOrder({ params }: { params: { id: string }}) {
               Product / pricing summary and order status
             </p>
           </div>
+          <Link className="text-indigo-600 hover:text-black pl-4 absolute right-2 top-1" href={"/orders"}>
+            <XCircleIcon
+                className='text-indigo-300 hover:text-indigo-500 h-10 w-10'
+                aria-hidden="true"
+              />
+              <span className="sr-only">, Close Edit</span>
+          </Link>
           <div className="mt-5 space-y-6 md:col-span-2 md:mt-0">
             <div className="grid grid-cols-3 gap-6">
               <div className="col-span-6 sm:col-span-2">
@@ -164,94 +167,6 @@ export default function EditOrder({ params }: { params: { id: string }}) {
                   disabled={true}
                 >
                 </InputWithAddon>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white px-4 py-5 shadow shadow-gray-300 sm:rounded-lg sm:p-6">
-        <div className="md:grid md:grid-cols-3 md:gap-6">
-          <div className="md:col-span-1">
-            <h3 className="text-lg font-medium leading-6 text-black">Shipping</h3>
-            <p className="mt-1 text-sm text-gray-500">Order recipient address details</p>
-          </div>
-          <div className="mt-5 md:col-span-2 md:mt-0">
-            <div className="grid grid-cols-6 gap-6">
-              <div className="col-span-6 sm:col-span-4">
-                <label htmlFor="full-name" className="block text-sm font-medium text-black">
-                  Full name (First and Last name)
-                </label>
-                <input
-                  type="text"
-                  name="full-name"
-                  id="full-name"
-                  autoComplete="given-name"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                />
-              </div>
-
-              <div className="col-span-6 sm:col-span-4 -mt-5">
-                <Select
-                  selected={selectedCountry}
-                  onChange={setSelectedCountry}
-                  items={countries}
-                  name="Country"
-                >
-                  
-                </Select>
-              </div>
-
-              <div className="col-span-6">
-                <label htmlFor="street-address" className="block text-sm font-medium text-black">
-                  Street address
-                </label>
-                <input
-                  type="text"
-                  name="street-address"
-                  id="street-address"
-                  autoComplete="street-address"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                />
-              </div>
-
-              <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                <label htmlFor="city" className="block text-sm font-medium text-black">
-                  City
-                </label>
-                <input
-                  type="text"
-                  name="city"
-                  id="city"
-                  autoComplete="address-level2"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                />
-              </div>
-
-              <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                <label htmlFor="region" className="block text-sm font-medium text-black">
-                  State / Province
-                </label>
-                <input
-                  type="text"
-                  name="region"
-                  id="region"
-                  autoComplete="address-level1"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                />
-              </div>
-
-              <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                <label htmlFor="postal-code" className="block text-sm font-medium text-black">
-                  ZIP / Postal code
-                </label>
-                <input
-                  type="text"
-                  name="postal-code"
-                  id="postal-code"
-                  autoComplete="postal-code"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                />
               </div>
             </div>
           </div>
