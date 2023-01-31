@@ -9,7 +9,8 @@ export function formatPriceFromDigits(digits: number) {
 }
 
 export function formatFloatStringToPrice(price: string) {
-  return parseFloat(parseFloat(price).toFixed(2)).toLocaleString("en-US", { minimumFractionDigits: 2 })
+  if (!price) { return price }
+  return parseFloat(parseFloat(price).toFixed(2)).toLocaleString("en-US", { minimumFractionDigits: 2 }) 
 }
 
 export function capitalize(str: string) {
