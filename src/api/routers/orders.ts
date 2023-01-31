@@ -33,6 +33,13 @@ export const orderRouter =  {
     }
     return useMutation({ mutationKey: ['orders'], mutationFn: mutationFn })
   },
+  useEdit: () => {
+    const mutationFn = async (data: { id: string, status: string }) => { 
+      const response = await fetcher(`/api/orders/${data.id}`, { method: "PATCH", data: data })
+      return OrderSchema.parse(response)
+    }
+    return useMutation({ mutationKey: ['orders'], mutationFn: mutationFn })
+  },
 }
 
 

@@ -43,6 +43,7 @@ export default function EditOrder({ params }: { params: { id: string }}) {
   })
 
   const apiUpsertShipment = api.shipments.useUpsert()
+  const apiOrderUpdate = api.orders.useEdit()
   const [selectedTrackingCompany, setSelectedTrackingCompany] = useState<SelectItem>(EmptySelectItem)
   const [trackingCompanyItems, setTrackingCompanyItems] = useState<SelectItem[]>([])
   const [selectedStatus, setSelectedStatus] = useState<SelectItem>(EmptySelectItem)
@@ -56,6 +57,7 @@ export default function EditOrder({ params }: { params: { id: string }}) {
 
   function handleSubmit(event: React.SyntheticEvent) {
     event.preventDefault()
+    let isRerouted = false
     apiUpsertShipment.mutate(
       {
         id: params.id,
@@ -65,8 +67,32 @@ export default function EditOrder({ params }: { params: { id: string }}) {
       },
       {
         onSuccess: () => {
-          toast.success("Updated successfully")
-          router.push("/orders")
+          if (!isRerouted) {
+            isRerouted = true
+            toast.success("Updated successfully")
+            router.push("/orders")
+          }
+        },
+        onError: () => {
+          toast.error("Oops.. Something went wrong")
+        }
+      }
+    )
+    apiOrderUpdate.mutate(
+      {
+        id: params.id,
+        status: selectedStatus.value.toLowerCase(),
+      },
+      {
+        onSuccess: () => {
+          if (!isRerouted) {
+            isRerouted = true
+            toast.success("Updated successfully")
+            router.push("/orders")
+          }
+        },
+        onError: () => {
+          toast.error("Oops.. Something went wrong")
         }
       }
     )

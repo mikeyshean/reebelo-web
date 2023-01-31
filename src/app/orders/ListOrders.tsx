@@ -46,12 +46,6 @@ export function ListOrders() {
                       </th>
                       <th
                         scope="col"
-                        className="sticky top-0 z-10 hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
-                      >
-                        Status
-                      </th>
-                      <th
-                        scope="col"
                         className="sticky top-0 z-10 hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter lg:table-cell"
                       >
                         Product
@@ -73,6 +67,12 @@ export function ListOrders() {
                         className="sticky top-0 z-10 hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter lg:table-cell"
                       >
                         Total
+                      </th>
+                      <th
+                        scope="col"
+                        className="sticky top-0 z-10 hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
+                      >
+                        Status
                       </th>
                       <th
                         scope="col"
@@ -109,21 +109,6 @@ export function ListOrders() {
                         <td
                           className={classNames(
                             idx !== orders.length - 1 ? 'border-b border-gray-200' : '',
-                            'whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden sm:table-cell'
-                          )}
-                        >
-                          <span className={classNames(
-                            order.status === "processing" ? "bg-yellow-100 text-yellow-800" : "",
-                            order.status === "cancelled" ? "bg-red-100 text-red-800" : "",
-                            order.status === "delivered" ? "bg-green-100 text-green-800" : "",
-                            "inline-flex rounded-full px-2 text-xs font-semibold leading-5"
-                            )}>
-                            {capitalize(order.status)}
-                          </span>
-                        </td>
-                        <td
-                          className={classNames(
-                            idx !== orders.length - 1 ? 'border-b border-gray-200' : '',
                             'whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden lg:table-cell'
                           )}
                         >
@@ -152,6 +137,21 @@ export function ListOrders() {
                           )}
                         >
                           $ {formatFloatStringToPrice(order.amountTotal)}
+                        </td>
+                        <td
+                          className={classNames(
+                            idx !== orders.length - 1 ? 'border-b border-gray-200' : '',
+                            'whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden sm:table-cell'
+                          )}
+                        >
+                          <span className={classNames(
+                            order.status === "processing" ? "bg-yellow-100 text-yellow-800" : "",
+                            order.status === "cancelled" ? "bg-red-100 text-red-800" : "",
+                            order.status === "delivered" ? "bg-green-100 text-green-800" : "",
+                            "inline-flex rounded-full px-2 text-xs font-semibold leading-5"
+                            )}>
+                            {capitalize(order.status)}
+                          </span>
                         </td>
                         <td
                           className={classNames(
