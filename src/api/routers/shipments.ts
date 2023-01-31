@@ -22,7 +22,7 @@ export const shipmentRouter =  {
     const mutationFn = async (
       data: { 
         id: string, 
-        trackingNumber: string,
+        trackingNumber: string|null,
         trackingCompanyId: string,
       }
     ) => { 

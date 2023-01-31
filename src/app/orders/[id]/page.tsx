@@ -59,13 +59,13 @@ export default function EditOrder({ params }: { params: { id: string }}) {
   function handleSubmit(event: React.SyntheticEvent) {
     event.preventDefault()
     let isRerouted = false
-    const trackingCompany = selectedTrackingCompany.key as string
-    if (trackingCompany && trackingNumber) {
+    const trackingCompanyId = selectedTrackingCompany.key as string
+    if (trackingCompanyId) {
       apiUpsertShipment.mutate(
         {
           id: params.id,
-          trackingNumber: trackingNumber,
-          trackingCompanyId: selectedTrackingCompany.key as string,
+          trackingNumber: trackingNumber || null,
+          trackingCompanyId: trackingCompanyId,
         },
         {
           onSuccess: () => {

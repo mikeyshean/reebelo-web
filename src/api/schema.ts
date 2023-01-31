@@ -34,7 +34,7 @@ export const OrderTrackingCompanySchema = z.object({
 })
 
 export const OrderShipmentSchema = z.object({
-  tracking_number: z.string(),
+  tracking_number: z.string().nullable(),
   tracking_company: OrderTrackingCompanySchema
 }).transform((input) => ({
   trackingNumber: input.tracking_number,
@@ -76,12 +76,10 @@ export type ListTrackingCompaniesType = z.infer<typeof ListTrackingCompaniesSche
 // Shipment
 export const ShipmentSchema = z.object({
   order_id: z.string(),
-  recipient_name: z.string(),
   tracking_company: TrackingCompanySchema,
-  tracking_number: z.string(),
+  tracking_number: z.string().nullable(),
 }).transform((input) => ({
   orderId: input.order_id,
-  recipientName: input.recipient_name,
   trackingCompany: input.tracking_company,
   trackingNumber: input.tracking_number,
 }))
