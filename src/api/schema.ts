@@ -8,17 +8,14 @@ export const ProductSchema = z.object({
 })
 
 export const ListProductSchema = z.object({
-  links: z.object({
-    next: z.string().nullable(),
-    previous: z.string().nullable()
-  }),
-  count: z.number(),
-  total_pages: z.number(),
+  next: z.string().nullable(),
+  previous: z.string().nullable(),
+  next_cursor: z.string().nullable(),
   results: ProductSchema.array()
 }).transform((input) => ({
-  links: input.links,
-  count: input.count,
-  totalPages: input.total_pages,
+  next: input.next,
+  previous: input.previous,
+  nextCursor: input.next_cursor,
   results: input.results
 }))
 
@@ -61,7 +58,7 @@ export const ShipmentSchema = z.object({
   order_id: z.string(),
   recipient_name: z.string(),
   tracking_company: TrackingCompanySchema,
-  tracking_number: z.string()
+  tracking_number: z.string(),
 }).transform((input) => ({
   orderId: input.order_id,
   recipientName: input.recipient_name,

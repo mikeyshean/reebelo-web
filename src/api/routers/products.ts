@@ -1,15 +1,15 @@
 import { fetcher } from "./fetcher";
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query'
 import { ListProductSchema, ProductSchema } from "../schema";
 
 
 export const productRouter =  {
-  useList: () => {
-    const queryFn = async () => { 
-      const response = await fetcher('/api/products')
+  useList: ({ ...args }: { [key: string]: any}) => {
+    const queryFn = async ({ pageParam = '' }) => { 
+      const response = await fetcher(`/api/products?cursor=${pageParam}`)
       return ListProductSchema.parse(response)
     }
-    return useQuery({ queryKey: ['products'], queryFn: queryFn })
+    return useInfiniteQuery({ queryKey: ['products'], queryFn: queryFn, getNextPageParam: (lastPage, pages) => lastPage.nextCursor, ...args })
   },
   useCreate: () => {
     const mutationFn = async (data: { name: string, quantity: string, price: string }) => { 

@@ -4,15 +4,18 @@ import { classNames, formatFloatStringToPrice } from "@/components/utils"
 import { PencilSquareIcon, TrashIcon, ShoppingCartIcon } from "@heroicons/react/24/outline"
 import { useQueryClient } from "@tanstack/react-query"
 import { ApiError, API_ERROR } from "api/errors"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useProductContext } from "./context"
 import CreateOrderModal from "./CreateOrderModal"
 import MutateProductModal from "./MutateProductModal"
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 
 export function ProductsPage() {
-  const { data: productPage } = api.products.useList()
+  const { data: productPage, hasNextPage, fetchNextPage, refetch } = api.products.useList({
+  })
   const apiDeleteProduct = api.products.useDelete()
+  const [infiniteDataLength, setInfiniteDataLength] = useState(0)
   const [showProductModal, setShowProductModal] = useState(false)
   const [showOrderModal, setShowOrderModal] = useState(false)
   const [isEditForm, setIsEditForm] = useState(false)
@@ -20,10 +23,16 @@ export function ProductsPage() {
   const queryClient = useQueryClient()
 
   function toggleProductModal() {
+    if (showProductModal) {
+      refetch()
+    }
     setShowProductModal(!showProductModal)
   }
   
   function toggleOrderModal() {
+    if (showOrderModal) {
+      refetch()
+    }
     setShowOrderModal(!showOrderModal)
   }
 
@@ -57,10 +66,24 @@ export function ProductsPage() {
     setShowOrderModal(true)
   }
 
-  function handleDelete(id: string) {
+  function setPagesLength() {
+    let length = 0
+    productPage?.pages.map((group, i) => {
+      length += group.results.length
+    })
+    setInfiniteDataLength(length)
+  }
+
+  function getAllProductItems() {
+    return productPage?.pages.flatMap((group, _i) => group.results) || []
+  }
+
+  function handleDelete(id: string, name: string) {
     apiDeleteProduct.mutate({id: id}, {
       onSuccess: () => {
+        toast.success(`Deleted ${name}`)
         queryClient.invalidateQueries({queryKey: ["products"]})
+        refetch()
       },
       onError(error) {
         if (error instanceof ApiError) {
@@ -72,6 +95,10 @@ export function ProductsPage() {
       },
     })
   }
+
+  useEffect(() => {
+    setPagesLength()
+  }, [productPage])
 
   return (
     <div className="mt-5 md:col-span-2 md:mt-10">
@@ -103,6 +130,12 @@ export function ProductsPage() {
           <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle">
               <div className="shadow-sm ring-1 ring-black ring-opacity-5">
+              <InfiniteScroll
+                next={() => {fetchNextPage()}}
+                hasMore={!!hasNextPage}
+                loader={<h3>Loading...</h3>}
+                dataLength={infiniteDataLength}
+              >
                 <table className="min-w-full border-separate" style={{ borderSpacing: 0 }}>
                   <thead className="bg-gray-50">
                     <tr className="divide-x divide-gray-200">
@@ -134,11 +167,13 @@ export function ProductsPage() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-x divide-gray-200">
-                    {productPage?.results?.map((product, idx) => (
+                  
+                    {getAllProductItems().map((product, idx)  => (
+
                       <tr key={product.id} className="divide-x divide-gray-200">
                         <td
                           className={classNames(
-                            idx !== productPage?.results.length - 1 ? 'border-b border-gray-200' : '',
+                            idx !== infiniteDataLength - 1 ? 'border-b border-gray-200' : '',
                             'whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8'
                           )}
                         >
@@ -146,7 +181,7 @@ export function ProductsPage() {
                         </td>
                         <td
                           className={classNames(
-                            idx !== productPage?.results.length - 1 ? 'border-b border-gray-200' : '',
+                            idx !== infiniteDataLength - 1 ? 'border-b border-gray-200' : '',
                             'whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden sm:table-cell'
                           )}
                         >
@@ -154,7 +189,7 @@ export function ProductsPage() {
                         </td>
                         <td
                           className={classNames(
-                            idx !== productPage?.results.length - 1 ? 'border-b border-gray-200' : '',
+                            idx !== infiniteDataLength - 1 ? 'border-b border-gray-200' : '',
                             'whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden lg:table-cell'
                           )}
                         >
@@ -162,7 +197,7 @@ export function ProductsPage() {
                         </td>
                         <td
                           className={classNames(
-                            idx !== productPage?.results.length - 1 ? 'border-b border-gray-200' : '',
+                            idx !== infiniteDataLength - 1 ? 'border-b border-gray-200' : '',
                             'flex justify-evenly whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-6 lg:pr-8'
                           )}
                         >
@@ -186,7 +221,7 @@ export function ProductsPage() {
                               />
                               <span className="sr-only">, Edit {product.name}</span>
                           </button>
-                          <button className="text-indigo-600 hover:text-black pl-4" onClick={() => handleDelete(product.id)}>
+                          <button className="text-indigo-600 hover:text-black pl-4" onClick={() => handleDelete(product.id, product.name)}>
                             <TrashIcon
                                 className={classNames(
                                   'text-indigo-300 hover:text-indigo-500',
@@ -201,6 +236,7 @@ export function ProductsPage() {
                     ))}
                   </tbody>
                 </table>
+              </InfiniteScroll>
               </div>
             </div>
           </div>

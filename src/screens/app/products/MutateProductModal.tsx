@@ -10,6 +10,7 @@ import { InputWithAddon } from '@/components/Forms/InputWithAddon'
 import { useProductContext } from './context'
 import { AdjustQuantityInput } from './components/AdjustQuantityInput'
 import { AdjustQuantityType } from './types'
+import { toast } from 'react-toastify'
 
 
 export default function MutateProductModal(
@@ -99,6 +100,7 @@ export default function MutateProductModal(
         {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["products"] })
+            toast.success(`Updated ${ctxProductName}`)
             resetValidations()
             toggleModal()
           },
@@ -124,6 +126,7 @@ export default function MutateProductModal(
         {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["products"]})
+            toast.success(`Created ${ctxProductName}`)
             setIsUniqueError(false)
             setIsValidName(true)
             toggleModal()
@@ -201,9 +204,9 @@ export default function MutateProductModal(
     if (show && !isEditForm) {
       setCtxProductName('')
       setCtxPrice('')
-      setCtxAdjustedQuantity('0')
-      setCtxAdjustQuantityType(AdjustQuantityType.NONE)
     }
+    setCtxAdjustedQuantity('0')
+    setCtxAdjustQuantityType(AdjustQuantityType.NONE)
     resetValidations()
   }, [show])
 

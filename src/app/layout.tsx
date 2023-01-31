@@ -28,7 +28,7 @@ export default function RootLayout({children}: {
         <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>
-        {mountToastContiner && <ToastContainer />}
+        {mountToastContiner && <ToastContainer autoClose={4000} />}
       </body>
     </html>
   );
