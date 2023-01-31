@@ -1,29 +1,39 @@
+"use client"
 import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { OrderIndex } from './orders'
-import { OrderProvider } from './orders/context'
-import { ProductIndex } from './products'
+import { OrderProvider } from './context'
 
 
 type NavType = {
   name: string,
-  component?: React.ReactNode
+  href: string
 }
 
 const navigation = [
-  { name: 'Products', component: <ProductIndex /> },
-  { name: 'Orders', component: <OrderIndex /> },
+  { name: 'Products', href: '/products' },
+  { name: 'Orders', href: '/orders' },
 ]
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function App() {
+export default function App({children}: {
+  children: React.ReactNode;
+}) {
   const [selected, setSelected] = useState<NavType>(navigation[0])
+  const router = useRouter()
 
+  function onClick(e: React.SyntheticEvent) {
+    e.preventDefault()
+    const href = e.currentTarget.getAttribute('href')
+    setSelected(navigation.find(item => item.href === href) || navigation[0])
+    router.push(href || '')
+  }
   return (
     <>
       <div className="min-h-full">
@@ -40,7 +50,7 @@ export default function App() {
                       <div className="hidden lg:ml-10 lg:block">
                         <div className="flex space-x-4">
                           {navigation.map((item) => (
-                            <button
+                            <Link
                               key={item.name}
                               className={classNames(
                                 item === selected
@@ -49,10 +59,11 @@ export default function App() {
                                 'rounded-md py-2 px-3 text-sm font-medium'
                               )}
                               aria-current={item === selected ? 'page' : undefined}
-                              onClick={() => setSelected(item)}
+                              href={item.href}
+                              onClick={onClick}
                             >
                               {item.name}
-                            </button>
+                            </Link>
                           ))}
                         </div>
                       </div>
@@ -80,7 +91,7 @@ export default function App() {
                     {navigation.map((item) => (
                       <Disclosure.Button
                         key={item.name}
-                        as="button"
+                        as="a"
                         className={classNames(
                           item === selected 
                           ? 'bg-reebelo-100 text-black'
@@ -88,7 +99,8 @@ export default function App() {
                           'block rounded-md py-2 px-3 text-base font-medium'
                         )}
                         aria-current={item === selected ? 'page' : undefined}
-                        onClick={() => setSelected(item)}
+                        href={item.href}
+                        onClick={onClick}
                       >
                         {item.name}
                       </Disclosure.Button>
@@ -109,7 +121,7 @@ export default function App() {
           <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
             <div className="rounded-lg bg-white px-5 py-6 shadow shadow-gray-400 sm:px-6">
               <OrderProvider>
-                {selected && selected.component}
+                {children}
               </OrderProvider>
             </div>
           </div>

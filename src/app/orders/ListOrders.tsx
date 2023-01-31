@@ -1,9 +1,8 @@
 import { api } from "@/api"
 import { capitalize, classNames, formatFloatStringToPrice } from "@/components/utils"
-import { PencilSquareIcon, TrashIcon, ShoppingCartIcon } from "@heroicons/react/24/outline"
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline"
 import { useQueryClient } from "@tanstack/react-query"
-import { useState } from "react"
-import { useOrderContext } from "./context"
+import { useOrderContext } from "../context"
 
 
 export function ListOrders() {

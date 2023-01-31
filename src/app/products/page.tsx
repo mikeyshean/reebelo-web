@@ -1,7 +1,8 @@
+"use client"
 import { ProductProvider } from "./context";
 import { ProductsPage } from "./ListProducts";
 
-export function ProductIndex() {
+export default function Page() {
 
   return (
     <ProductProvider>

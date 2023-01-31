@@ -1,6 +1,7 @@
+"use client"
 import { OrderPage } from "./OrderPage";
 
-export function OrderIndex() {
+export default function Page() {
   return (
     <OrderPage />
   )

@@ -4,7 +4,7 @@ import { InputWithAddon } from "@/components/Forms/InputWithAddon"
 import { EmptySelectItem, Select, SelectItem } from "@/components/Forms/Select"
 import { ListTrackingCompaniesType, OrderType, ShipmentType } from "api/schema"
 import { useState } from "react"
-import { useOrderContext } from "./context"
+import { useOrderContext } from "../context"
 
 const countries = [
   { key: 1, value: "United States"},

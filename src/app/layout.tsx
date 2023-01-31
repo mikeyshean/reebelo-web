@@ -8,6 +8,7 @@ import {
     QueryClientProvider,
   } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
+import App from 'app'
 
 export default function RootLayout({children}: {
     children: React.ReactNode;
@@ -26,7 +27,9 @@ export default function RootLayout({children}: {
       </head>
       <body className="h-full">
         <QueryClientProvider client={queryClient}>
-          {children}
+          <App>
+            {children}
+          </App>
         </QueryClientProvider>
         {mountToastContiner && <ToastContainer autoClose={4000} />}
       </body>
