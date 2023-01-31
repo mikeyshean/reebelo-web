@@ -31,7 +31,8 @@ create Orders may be directly linked to the consumer purchase flow.
 - Searchable products with infinite scroll
 - Create, Edit, and Delete products
 - Create, Edit, and Delete orders
-- Ability to add / remove incremental product inventory
+- Add / remove incremental product inventory
+- Add tracking # and tracking company to Order
 
 ## API and Services
 export const api = {
@@ -59,9 +60,9 @@ export const erd = {
 - <a href="https://github.com/mikeyshean/reebelo-web">Github Repo</a>
 - Next.js, React/TypeScript
 - TailwindCSS/UI for rapid prototyping
-- Zod schema validations
-- Toasts
-- Infinite Scroll
+- Zod schema validations - <a href="https://www.npmjs.com/package/zod">Zod</a>
+- Toasts - <a href="https://www.npmjs.com/package/react-toastify">react-toastify</a>
+- Infinite Scroll - <a href="https://www.npmjs.com/package/react-infinite-scroll-component">react-infinite-scroll-component</a>
 - Products
   - Shared modal form for Product mutation Create/Edit
   - Delete
@@ -69,9 +70,9 @@ export const erd = {
   - Create through modal form directly from the Product list row
   - Edit to update Order status and tracking info
   - Delete
-- Deployed through Vercel
-  - Ideally, we&apos;d deploy the FE to multiple regions as close to the end user as possible
-  - Serve static assets via CDN
+- Deployed through Vercel default deployment
+  - Serve static assets via <a href="https://vercel.com/docs/concepts/edge-network/overview">Vercel Edge Network</a> CDN
+  - Multi-region deployment
 
 ## Backend Tech and Features
 - <a href="https://github.com/mikeyshean/reebelo-backend">Github Repo</a>
@@ -83,10 +84,10 @@ broken out into several microservices if needed to scale independently
     - Shipments Service
 - Cursor pagination with search query for List Products API
 - Data consistency by locking product during quantity adjustments
-- Deployed with AWS Copilot as a Load balanced service in a test env for quicker prototyping
+- Deployed with <a href="https://aws.github.io/copilot-cli/">AWS Copilot</a> as a Load balanced service in a test env for quicker prototyping
 - Running t3 micro free tier PostgreSQL DB, because I'm not paying for Aurora
 - Seeded with 10,000 products
-- Dockerized and CI/CD via AWS CodePipeline -> ECR -> ECS
+- Dockerized and CI/CD via AWS CodePipeline -> ECR -> ECS Fargate
 
 ## Pros
 - Implemented as three services: Product, Orders, Shipments

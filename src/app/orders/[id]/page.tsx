@@ -58,26 +58,28 @@ export default function EditOrder({ params }: { params: { id: string }}) {
   function handleSubmit(event: React.SyntheticEvent) {
     event.preventDefault()
     let isRerouted = false
-    apiUpsertShipment.mutate(
-      {
-        id: params.id,
-        trackingNumber: trackingNumber,
-        trackingCompanyId: selectedTrackingCompany.key as string,
-        recipientName: "me"
-      },
-      {
-        onSuccess: () => {
-          if (!isRerouted) {
-            isRerouted = true
-            toast.success("Updated successfully")
-            router.push("/orders")
-          }
+    const trackingCompany = selectedTrackingCompany.key as string
+    if (trackingCompany && trackingNumber) {
+      apiUpsertShipment.mutate(
+        {
+          id: params.id,
+          trackingNumber: trackingNumber,
+          trackingCompanyId: selectedTrackingCompany.key as string,
         },
-        onError: () => {
-          toast.error("Oops.. Something went wrong")
+        {
+          onSuccess: () => {
+            if (!isRerouted) {
+              isRerouted = true
+              toast.success("Updated successfully")
+              router.push("/orders")
+            }
+          },
+          onError: () => {
+            toast.error("Oops.. Something went wrong")
+          }
         }
-      }
-    )
+      )
+    }
     apiOrderUpdate.mutate(
       {
         id: params.id,

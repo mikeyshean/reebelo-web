@@ -24,13 +24,11 @@ export const shipmentRouter =  {
         id: string, 
         trackingNumber: string,
         trackingCompanyId: string,
-        recipientName: string
       }
     ) => { 
       const putData = {
         tracking_number: data.trackingNumber,
         tracking_company_id: data.trackingCompanyId,
-        recipient_name: data.recipientName
       }
 
       const response = await fetcher(`/api/shipments/${data.id}`, { method: "PUT", data: putData })

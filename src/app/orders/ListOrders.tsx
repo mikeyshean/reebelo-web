@@ -3,6 +3,7 @@ import { capitalize, classNames, formatFloatStringToPrice } from "@/components/u
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline"
 import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
+import { toast } from "react-toastify"
 
 
 export function ListOrders() {
@@ -19,6 +20,7 @@ export function ListOrders() {
     apiDeleteOrder.mutate({id: id}, {
       onSuccess: () => {
         queryClient.invalidateQueries({queryKey: ["orders"]})
+        toast.success("Deleted Successfully")
       }
     })
   }
