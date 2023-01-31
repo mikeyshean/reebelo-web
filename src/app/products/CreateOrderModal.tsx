@@ -7,7 +7,7 @@ import { Input } from '@/components/Forms/Input'
 import { ValidationMessage } from '@/components/Forms/ValidationMessage'
 import { InputWithAddon } from '@/components/Forms/InputWithAddon'
 import { useProductContext } from './context'
-import { toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
 
 
 export default function CreateOrderModal(
@@ -22,16 +22,17 @@ export default function CreateOrderModal(
 ) {
   const apiCreateOrder = api.orders.useCreate()
   const { ctxProductName, ctxProductId, ctxPrice } = useProductContext()
-  const [quantityValue, setQuantityValue] = useState<string>('0')
+  const [quantityValue, setQuantityValue] = useState<string>('1')
   const [isValidQuantity, setIsValidQuantity] = useState(true)
   const [isOutOfStockError, setIsOutOfStockError] = useState(false)
   const queryClient = useQueryClient()
+  const router = useRouter()
 
 
   async function handleOnSubmit() {
 
     const quantity = parseInt(quantityValue)
-    if (isNaN(quantity) || quantity < 0) {
+    if (isNaN(quantity) || quantity <= 0) {
       setIsValidQuantity(false)
       return
     }
@@ -42,10 +43,11 @@ export default function CreateOrderModal(
         quantity: quantityValue
       }, 
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
           queryClient.invalidateQueries({ queryKey: ["products"]})
           setIsValidQuantity(true)
           toggleModal()
+          router.push(`/orders/${data.id}`)
         },
         onError: (error) => {
           if (error instanceof ApiError) {

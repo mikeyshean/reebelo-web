@@ -1,8 +1,9 @@
 "use client"
-import { OrderPage } from "./OrderPage";
+import { ListOrders } from "./ListOrders"
 
 export default function Page() {
+
   return (
-    <OrderPage />
+    <ListOrders />
   )
 }

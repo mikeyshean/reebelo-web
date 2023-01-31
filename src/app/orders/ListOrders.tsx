@@ -2,17 +2,17 @@ import { api } from "@/api"
 import { capitalize, classNames, formatFloatStringToPrice } from "@/components/utils"
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline"
 import { useQueryClient } from "@tanstack/react-query"
-import { useOrderContext } from "../context"
+import { useRouter } from "next/navigation"
 
 
 export function ListOrders() {
   const { data: orders } = api.orders.useList()
   const apiDeleteOrder = api.orders.useDelete()
-  const { setCtxOrderId } = useOrderContext()
   const queryClient = useQueryClient()
+  const router = useRouter()
 
   function handleEditForm(id: string) {
-    setCtxOrderId(id)
+    router.push(`/orders/${id}`)
   }
 
   function handleDelete(id: string) {
@@ -78,6 +78,12 @@ export function ListOrders() {
                         scope="col"
                         className="sticky top-0 z-10 hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter lg:table-cell"
                       >
+                        Shipper
+                      </th>
+                      <th
+                        scope="col"
+                        className="sticky top-0 z-10 hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter lg:table-cell"
+                      >
                         Tracking #
                       </th>
                       <th
@@ -98,7 +104,7 @@ export function ListOrders() {
                             'whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8'
                           )}
                         >
-                          {order.id}
+                          {order.id.substring(0,8)}...
                         </td>
                         <td
                           className={classNames(
@@ -153,7 +159,15 @@ export function ListOrders() {
                             'whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden lg:table-cell'
                           )}
                         >
-                          123234
+                          {order.shipment?.trackingCompany.name}
+                        </td>
+                        <td
+                          className={classNames(
+                            idx !== orders.length - 1 ? 'border-b border-gray-200' : '',
+                            'whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden lg:table-cell'
+                          )}
+                        >
+                          {order.shipment?.trackingNumber}
                         </td>
                         <td
                           className={classNames(

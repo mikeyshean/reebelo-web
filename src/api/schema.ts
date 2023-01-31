@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+// Product
 export const ProductSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -19,11 +20,26 @@ export const ListProductSchema = z.object({
   results: input.results
 }))
 
+
+// Orders
 export const OrderProductSchema = z.object({
   id: z.string(),
   name: z.string(),
   price: z.string(),
 })
+
+
+export const OrderTrackingCompanySchema = z.object({
+  name: z.string(),
+})
+
+export const OrderShipmentSchema = z.object({
+  tracking_number: z.string(),
+  tracking_company: OrderTrackingCompanySchema
+}).transform((input) => ({
+  trackingNumber: input.tracking_number,
+  trackingCompany: input.tracking_company
+}))
 
 export const OrderSchema = z.object({
   id: z.string(),
@@ -31,20 +47,23 @@ export const OrderSchema = z.object({
   status: z.enum(["processing", "delivered", "cancelled"]),
   quantity: z.number(),
   amount_per_unit: z.string(),
-  amount_total: z.string()
+  amount_total: z.string(),
+  shipment: OrderShipmentSchema.nullable()
 }).transform((input) => ({
   id: input.id,
   product: input.product,
   status: input.status,
   quantity: input.quantity,
   amountPerUnit: input.amount_per_unit,
-  amountTotal: input.amount_total
+  amountTotal: input.amount_total,
+  shipment: input.shipment
 }))
 
 export const ListOrderSchema = OrderSchema.array()
 
 export type OrderType = z.infer<typeof OrderSchema>
 
+// TrackingCompany
 export const TrackingCompanySchema = z.object({
   id: z.string(),
   name: z.string()
@@ -54,6 +73,7 @@ export const ListTrackingCompaniesSchema = TrackingCompanySchema.array()
 
 export type ListTrackingCompaniesType = z.infer<typeof ListTrackingCompaniesSchema>
 
+// Shipment
 export const ShipmentSchema = z.object({
   order_id: z.string(),
   recipient_name: z.string(),

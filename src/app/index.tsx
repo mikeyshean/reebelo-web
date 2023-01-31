@@ -3,19 +3,14 @@ import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { OrderProvider } from './context'
-
-
-type NavType = {
-  name: string,
-  href: string
-}
 
 const navigation = [
-  { name: 'Products', href: '/products' },
-  { name: 'Orders', href: '/orders' },
+  { name: 'Home', href: '/', pattern: /^\/$/ },
+  { name: 'Products', href: '/products', pattern: /^\/products\/?$/ },
+  { name: 'Orders', href: '/orders', pattern: /^\/orders\/?$/ },
+  { name: 'Edit Order', href: '/orders', pattern: /^\/orders\/[a-z0-9-]+$/ },
 ]
 
 function classNames(...classes: string[]) {
@@ -25,15 +20,20 @@ function classNames(...classes: string[]) {
 export default function App({children}: {
   children: React.ReactNode;
 }) {
-  const [selected, setSelected] = useState<NavType>(navigation[0])
   const router = useRouter()
-
+  const [selected, setSelected] = useState(navigation[0])
   function onClick(e: React.SyntheticEvent) {
     e.preventDefault()
     const href = e.currentTarget.getAttribute('href')
-    setSelected(navigation.find(item => item.href === href) || navigation[0])
-    router.push(href || '')
+    router.push(href || '/')
   }
+  
+  const pathName = usePathname()
+  const route = navigation.find(item => item.pattern.test(pathName || ''))
+  if (route && selected !== route) {
+    setSelected(route)
+  }
+
   return (
     <>
       <div className="min-h-full">
@@ -56,7 +56,8 @@ export default function App({children}: {
                                 item === selected
                                   ? 'bg-reebelo-100 text-black'
                                   : 'text-reebelo-100 hover:bg-indigo-500 hover:bg-opacity-75',
-                                'rounded-md py-2 px-3 text-sm font-medium'
+                                'rounded-md py-2 px-3 text-sm font-medium',
+                                item.name === "Edit Order" && selected !== item ? "hidden" : ""
                               )}
                               aria-current={item === selected ? 'page' : undefined}
                               href={item.href}
@@ -93,7 +94,7 @@ export default function App({children}: {
                         key={item.name}
                         as="a"
                         className={classNames(
-                          item === selected 
+                          item === selected
                           ? 'bg-reebelo-100 text-black'
                           : 'text-reebelo-100 hover:bg-indigo-500 hover:bg-opacity-75',
                           'block rounded-md py-2 px-3 text-base font-medium'
@@ -120,9 +121,7 @@ export default function App({children}: {
         <main className="-mt-32">
           <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
             <div className="rounded-lg bg-white px-5 py-6 shadow shadow-gray-400 sm:px-6">
-              <OrderProvider>
-                {children}
-              </OrderProvider>
+              {children}
             </div>
           </div>
         </main>

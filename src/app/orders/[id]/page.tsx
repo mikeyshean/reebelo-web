@@ -1,10 +1,11 @@
+"use client"
 import { api } from "@/api"
 import { Input } from "@/components/Forms/Input"
 import { InputWithAddon } from "@/components/Forms/InputWithAddon"
 import { EmptySelectItem, Select, SelectItem } from "@/components/Forms/Select"
 import { ListTrackingCompaniesType, OrderType, ShipmentType } from "api/schema"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { useOrderContext } from "../context"
 
 const countries = [
   { key: 1, value: "United States"},
@@ -19,16 +20,15 @@ const orderStatuses = [
   { key: 3, value: "Delivered" },
 ]
 
-export default function EditOrder() {
-  const { ctxOrderId, setCtxOrderId } = useOrderContext()
+export default function EditOrder({ params }: { params: { id: string }}) {
   const { data: order } = api.orders.useGet({
-    id: ctxOrderId, 
+    id: params.id, 
     onSuccess: (data: OrderType) => {
       setSelectedStatus(orderStatuses.find(item => item.value.toLowerCase() === data.status) || EmptySelectItem)
     } 
   })
   api.shipments.useGet({
-    id: ctxOrderId, 
+    id: params.id, 
     retry: false,
     onSuccess: (data: ShipmentType) => {
       const trackingCompany = data.trackingCompany
@@ -52,11 +52,8 @@ export default function EditOrder() {
   const [trackingCompanyItems, setTrackingCompanyItems] = useState<SelectItem[]>([])
   const [selectedStatus, setSelectedStatus] = useState<SelectItem>(EmptySelectItem)
   const [trackingNumber, setTrackingNumber] = useState('')
+  const router = useRouter()
   
-  function toggleEditForm() {
-    setCtxOrderId('')
-  }
-
   function formatTrackingCompanyItems(data: ListTrackingCompaniesType) {
     const items = data.map((item) => { return {key: item.id, value: item.name }})
     setTrackingCompanyItems(items)
@@ -66,14 +63,14 @@ export default function EditOrder() {
     event.preventDefault()
     apiUpsertShipment.mutate(
       {
-        id: ctxOrderId,
+        id: params.id,
         trackingNumber: trackingNumber,
         trackingCompanyId: selectedTrackingCompany.key as string,
         recipientName: "me"
       },
       {
         onSuccess: () => {
-          toggleEditForm()
+          router.push("/orders")
         }
       }
     )
@@ -298,7 +295,7 @@ export default function EditOrder() {
         <button
           type="button"
           className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          onClick={toggleEditForm}
+          onClick={() => router.push("/orders")}
         >
           Cancel
         </button>
